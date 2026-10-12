@@ -273,6 +273,10 @@ button.chip[aria-pressed="true"] i{box-shadow:0 0 0 2px var(--o)}
 .recap img.pic{display:block;width:auto;max-width:100%;max-height:54vh;margin:0 auto 14px;box-shadow:0 0 0 3px var(--o)}
 .recap .ex-actions{justify-content:center}
 
+.wnav{display:flex;align-items:center;gap:10px;margin:22px 0 12px}
+.wnav .wr{flex:1;text-align:center;font-weight:600}
+.pbar.w{gap:6px}
+.cd.pre{opacity:.45}
 .ctl .seg button{font-size:14px;padding-inline:8px}
 .ib .pxi.gear{width:22px}
 .hero .big.sm{font-size:16px;line-height:1.5}
@@ -323,7 +327,7 @@ const STANDALONE=!(window.claude&&window.claude.use);
 let workouts={};
 const now=new Date();
 const iso0=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-const S={tab:'ch',start:'',cdSel:'',editStart:false,from:'cal',y:now.getFullYear(),m:now.getMonth(),sel:iso0(now),active:null,range:12,metric:'weight',pEx:null,
+const S={tab:'ch',start:'',cdSel:'',editStart:false,from:'cal',y:now.getFullYear(),m:now.getMonth(),sel:iso0(now),active:null,range:12,metric:'weight',pEx:null,weekOff:0,
   sync:'',confirmDel:false,confirmEx:null,sheet:null,restSec:90,gender:'',lang:'ru',sound:true};
 {
   const r=+lsGet(LSR);if([60,90,120,180].includes(r))S.restSec=r;
@@ -526,7 +530,7 @@ function knownExercises(){
 
 /* ---------- общая отрисовка ---------- */
 function paintTabs(){
-  const tabs=[['ch',L('Челлендж','Challenge')],['cal',L('Календарь','Calendar')],['log',L('Тренировка','Workout')],['prog',L('Прогресс','Progress')]];
+  const tabs=[['ch',L('Программа','Program')],['cal',L('Календарь','Calendar')],['log',L('Тренировка','Workout')],['prog',L('Прогресс','Progress')]];
   $('#tabs').setAttribute('aria-label',L('Разделы','Sections'));
   $('#tabs div').innerHTML=tabs.map(([k,l])=>`<button data-act="tab" data-tab="${k}" aria-current="${S.tab===k?'page':'false'}">${TABICON[k]}${l}</button>`).join('');
 }
@@ -593,8 +597,8 @@ function openProgWorkout(date){
   createWorkout(date,tpl);
 }
 function setStart(date){
-  S.start=date;S.editStart=false;S.cdSel='';lsSet(LSC,date);
-  render();window.scrollTo(0,0);toast(L('Старт: ','Start: ')+fmtDay(date));
+  S.start=date;S.editStart=false;S.cdSel='';S.weekOff=0;lsSet(LSC,date);
+  render();window.scrollTo(0,0);toast(L('Начало: ','Start: ')+fmtDay(date));
 }
 const hid=()=>{try{return JSON.parse(lsGet(LSD)||'{}')||{}}catch(e){return{}}};
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}};
@@ -619,67 +623,73 @@ function backupSection(){
   return `<section class="daypanel"><div class="head"><h2>${L('Резервная копия','Backup')}</h2></div><p class="note" style="margin:0 0 10px">${L('Данные лежат только на этом устройстве, в браузере. Сохраняй копию раз в неделю: при очистке браузера или смене телефона её можно загрузить обратно.','Your data lives only on this device, in the browser. Save a backup once a week: if the browser is cleared or you change phones, you can load it back.')}${le?` ${L('Последняя копия: ','Last backup: ')}${fmtDay(iso(new Date(le)))}.`:''}</p><div class="ex-actions"><button class="btn sm" data-act="export">${L('Сохранить копию','Save backup')}</button><button class="btn sm" data-act="import">${L('Загрузить из файла','Load from file')}</button><input type="file" id="impf" accept="application/json,.json" hidden></div></section>`;
 }
 function chFooter(){
-  return `<section class="daypanel"><div class="head"><h2>${L('Ещё','More')}</h2></div><div class="ex-actions"><button class="btn sm" data-act="settings">${L('Настройки','Settings')}</button><button class="btn sm" data-act="help">${L('Как пользоваться','How to use')}</button>${deferredInstall&&!isStandalone()?`<button class="btn sm" data-act="install">${L('Установить приложение','Install app')}</button>`:''}${S.start&&!S.editStart?`<button class="btn sm" data-act="edit-start">${L('Изменить дату старта','Change start date')}</button>`:''}</div></section>${backupSection()}`;
+  return `<section class="daypanel"><div class="head"><h2>${L('Ещё','More')}</h2></div><div class="ex-actions"><button class="btn sm" data-act="settings">${L('Настройки','Settings')}</button><button class="btn sm" data-act="help">${L('Как пользоваться','How to use')}</button>${deferredInstall&&!isStandalone()?`<button class="btn sm" data-act="install">${L('Установить приложение','Install app')}</button>`:''}${S.start&&!S.editStart?`<button class="btn sm" data-act="edit-start">${L('Изменить дату начала','Change start date')}</button>`:''}</div></section>${backupSection()}`;
 }
 const SAYS={
- setup:{ru:['Привет! Я <b>Борис</b>. Выбери дату старта, и качаем 30 дней.'],ruf:['Привет! Выбери дату старта, и качаем 30 дней вместе.'],en:['Hey! I’m <b>Boris</b>. Pick a start date and we’re on for 30 days.'],enf:['Hey! Pick a start date and we’re on for 30 days.']},
+ setup:{ru:['Привет! Я <b>Борис</b>. Выбери дату начала тренировок, и погнали.'],ruf:['Привет! Выбери дату начала тренировок, и погнали.'],en:['Hey! I’m <b>Boris</b>. Pick the date you start training and let’s go.'],enf:['Hey! Pick the date you start training and let’s go.']},
  before:{ru:['Разминайся. Скоро начинаем!','Железо уже скучает по тебе.'],en:['Warm up. We start soon!','The iron already misses you.']},
  todo:{ru:['Ну что, качаем? Железо ждёт!','Не стой столбом. Жми «Начать тренировку».','Блины сами себя не поднимут.','Один подход, и ты уже в деле.'],en:['Ready to lift? The iron is waiting!','Don’t just stand there. Hit “Start workout”.','The plates won’t lift themselves.','One set and you’re already in.']},
  doing:{ru:['Ты начал, так дотяни до конца!'],ruf:['Ты начала, так дотяни до конца!'],en:['You started, so finish it!']},
  done:{ru:['Вот это сила! Тренировка в кармане.','Красавчик. Теперь еда и сон.','Тоннаж растёт, усы тоже.'],ruf:['Вот это сила! Тренировка в кармане.','Красотка. Теперь еда и сон.','Тоннаж растёт, форма тоже.'],en:['Now that’s strength! Workout done.','Nice work. Now food and sleep.','Tonnage is growing, and so is the mustache.'],enf:['Now that’s strength! Workout done.','Nice work. Now food and sleep.','Tonnage is growing, and so are you.']},
- rest:{ru:['Сегодня отдых. Мышцы растут, пока ты спишь.','Отдых тоже часть программы.','Выпей воды и не забудь поесть.'],en:['Rest day. Muscles grow while you sleep.','Rest is part of the program.','Drink water and don’t forget to eat.']},
- after:{ru:['30 дней позади! Ты машина. Жми «Мои итоги».'],en:['30 days done! You’re a machine. Tap “My results”.']}
+ rest:{ru:['Сегодня отдых. Мышцы растут, пока ты спишь.','Отдых тоже часть программы.','Выпей воды и не забудь поесть.'],en:['Rest day. Muscles grow while you sleep.','Rest is part of the program.','Drink water and don’t forget to eat.']}
 };
 const say=(k,n=0)=>{const o=SAYS[k],a=(S.gender==='f'&&o[S.lang+'f'])||o[S.lang];return a[Math.abs(n)%a.length]};
 const talk=(img,text,extra='')=>`<div class="talk">${spr(img)}<div class="bw"><div class="bubble">${text}</div>${extra}</div></div>`;
-const pbar=n=>`<div class="pbar" role="img" aria-label="${L('Пройдено','Done')} ${Math.min(30,Math.max(0,n-1))} ${L('из 30 дней','of 30 days')}">${Array.from({length:30},(_,i)=>`<i class="${n>30||i<n-1?'on':i===n-1?'now':''}"></i>`).join('')}</div>`;
 const SCENE_BY={1:'squat',3:'bench',5:'pull'};
+const mondayOf=s=>iso(monday(parse(s)));
+function weekDays(off){const base=addDays(mondayOf(todayISO()),off*7);return Array.from({length:14},(_,i)=>{const date=addDays(base,i),dow=parse(date).getDay();return{date,dow,p:PROGRAM[dow]||null}})}
+function nextPlanned(from){for(let i=1;i<=14;i++){const date=addDays(from,i),dow=parse(date).getDay();if(PROGRAM[dow])return{date,dow,p:PROGRAM[dow]}}return null}
+function workedDays(){const set=new Set();list().forEach(w=>{if(wStats(w).sets>0)set.add(w.date)});return set}
 function setupCard(){
   const nm=nextMonday(),isMon=nm===todayISO();
-  return `<section class="card"><h2>${S.start?L('Дата старта','Start date'):L('Когда стартуем?','When do we start?')}</h2>
+  return `<section class="card"><h2>${S.start?L('Дата начала','Start date'):L('Когда начинаем?','When do we start?')}</h2>
   ${talk('walk',say('setup'))}
-  <p class="note">${L('30 дней, тренировки в понедельник, среду и пятницу. Лучше начинать в понедельник: так недели совпадают с программой в клубе.','30 days, workouts on Monday, Wednesday and Friday. It’s best to start on a Monday so your weeks match the club program.')}${S.start?L(' Записанные тренировки не удалятся.',' Logged workouts will not be deleted.'):''}</p>
+  <p class="note">${L('Тренировки в понедельник, среду и пятницу. Лучше начинать в понедельник: так недели совпадают с программой в клубе.','Workouts on Monday, Wednesday and Friday. It’s best to start on a Monday so your weeks match the club program.')}${S.start?L(' Записанные тренировки не удалятся.',' Logged workouts will not be deleted.'):''}</p>
   <ul class="exl" style="margin-bottom:16px">${[1,3,5].map(k=>`<li><span>${SHORT(k)} · ${ttl(PROGRAM[k].title)}</span><span>${PROGRAM[k].ex.length} ${U().ex}</span></li>`).join('')}</ul>
-  <div class="ex-actions"><button class="btn pri" data-act="start-set" data-date="${nm}">${isMon?L('Стартую сегодня, ','Start today, '):L('С понедельника, ','From Monday, ')}${fmtDay(nm)}</button>${isMon?'':`<button class="btn" data-act="start-set" data-date="${todayISO()}">${L('Сегодня','Today')}</button>`}</div>
-  <div class="ctl" style="margin:14px 0 0"><input class="wdate" id="sdate" type="date" value="${S.start||nm}" aria-label="${L('Своя дата старта','Custom start date')}"><button class="btn sm" data-act="start-pick">${L('Выбрать эту дату','Use this date')}</button>${S.start?`<button class="btn sm" data-act="start-cancel">${L('Отмена','Cancel')}</button>`:''}</div></section>`;
+  <div class="ex-actions"><button class="btn pri" data-act="start-set" data-date="${nm}">${isMon?L('Начинаю сегодня, ','Start today, '):L('С понедельника, ','From Monday, ')}${fmtDay(nm)}</button>${isMon?'':`<button class="btn" data-act="start-set" data-date="${todayISO()}">${L('Сегодня','Today')}</button>`}</div>
+  <div class="ctl" style="margin:14px 0 0"><input class="wdate" id="sdate" type="date" value="${S.start||nm}" aria-label="${L('Своя дата начала','Custom start date')}"><button class="btn sm" data-act="start-pick">${L('Выбрать эту дату','Use this date')}</button>${S.start?`<button class="btn sm" data-act="start-cancel">${L('Отмена','Cancel')}</button>`:''}</div></section>`;
 }
 function viewCh(){
   const td=todayISO();
-  let h=`<div class="brand"><img src="icons/icon-${S.gender==='f'?'g-':''}192.png" width="52" height="52" alt=""><div class="bt"><h1>${BRAND[S.lang]}</h1><div class="mute">${L('Пн · Ср · Пт · 30 дней вместе','Mon · Wed · Fri · 30 days together')}</div></div><button class="ib" data-act="settings" aria-label="${L('Настройки','Settings')}">${IC.gear}</button></div><div class="sync" id="sync"></div>${nudges()}`;
+  let h=`<div class="brand"><img src="icons/icon-${S.gender==='f'?'g-':''}192.png" width="52" height="52" alt=""><div class="bt"><h1>${BRAND[S.lang]}</h1><div class="mute">${L('Дневник тренировок','Workout log')}</div></div><button class="ib" data-act="settings" aria-label="${L('Настройки','Settings')}">${IC.gear}</button></div><div class="sync" id="sync"></div>${nudges()}`;
   if(!S.start||S.editStart)return h+setupCard()+chFooter();
-  const days=chDays(),end=days[29].date,n=dayDiff(td,S.start)+1,state=n<1?'before':n>30?'after':'on';
-  if(!S.cdSel||S.cdSel<S.start||S.cdSel>end)S.cdSel=state==='on'?td:days[0].date;
-  const inR=list().filter(w=>w.date>=S.start&&w.date<=end);
-  let sets=0,vol=0;inR.forEach(w=>{const s=wStats(w);if(s.sets){sets+=s.sets;vol+=s.vol}});
-  const planned=days.filter(d=>d.p).length,okc=days.filter(d=>d.p&&hasDone(d.date)).length;
-  const lab=`<div class="label">${L('Челлендж','Challenge')}</div>`;
+  const wd=weekDays(S.weekOff||0),first=wd[0].date,last=wd[13].date;
+  if(!S.cdSel||S.cdSel<first||S.cdSel>last)S.cdSel=(td>=first&&td<=last)?td:(wd.find(d=>d.p&&d.date>=S.start)||wd[0]).date;
+  const done=workedDays();
+  let sets=0,vol=0,tr=0;list().forEach(w=>{if(w.date>=S.start){const s=wStats(w);if(s.sets){tr++;sets+=s.sets;vol+=s.vol}}});
+  const curWeek=weekDays(0).slice(0,7);
+  const wkAll=curWeek.filter(d=>d.p),wkPlan=wkAll.filter(d=>d.date>=S.start),segs=wkPlan.length?wkPlan:wkAll;
+  const wkDone=wkPlan.filter(d=>done.has(d.date)).length;
+  const state=td<S.start?'before':'on';
+  const wkNo=Math.floor(dayDiff(mondayOf(td),mondayOf(S.start))/7)+1;
+  const wbar=`<div class="pbar w" role="img" aria-label="${L('Тренировок на этой неделе','Workouts this week')}: ${wkDone} ${L('из','of')} ${segs.length}">${segs.map(d=>`<i class="${done.has(d.date)?'on':d.date===td?'now':''}"></i>`).join('')}</div>`;
+  const lab=`<div class="label">${L('Программа','Program')}</div>`;
   let hero='';
   if(state==='before'){
-    const k=dayDiff(S.start,td),f=days.find(d=>d.p);
-    hero=`${lab}<div class="big sm">${L(`Старт через ${k} ${plural(k,'день','дня','дней')}`,`Starts in ${k} ${plural(k,'day','days','days')}`)}</div>${pbar(0)}<div class="plan">${WDN[S.lang][parse(S.start).getDay()]}, ${fmtDay(S.start)}. ${L('Первая тренировка','First workout')}: <b>${ttl(f.p.title)}</b>, ${fmtDay(f.date)}.</div>${talk('idle',say('before',k))}`;
-  }else if(state==='on'){
-    const dd=days[n-1],wk=dayWorkout(td),done=wk&&wStats(wk).sets>0;
-    hero=`${lab}<div class="big">${L('День','Day')} ${n}<small> / 30</small></div>${pbar(n)}`;
-    if(dd.p){
-      if(done){const s=wStats(wk);hero+=`<div class="plan">${L('Сегодня выполнено','Done today')}: <b>${ttl(dd.p.title)}</b>. ${s.sets} ${nsets(s.sets)}, ${fmtVol(s.vol)}.</div>${talk('flex',say('done',n),`<button class="btn" data-act="ch-open" data-date="${td}">${L('Открыть тренировку','Open workout')}</button>`)}`}
-      else hero+=`<div class="plan">${L('Сегодня','Today')}: <b>${ttl(dd.p.title)}</b></div>${talk('point',say(wk?'doing':'todo',n),`<button class="btn pri" data-act="ch-start" data-date="${td}">${wk?L('Продолжить тренировку','Continue workout'):L('Начать тренировку','Start workout')}</button>`)}`;
-    }else{
-      const nx=days.find(d=>d.n>n&&d.p);
-      hero+=(nx?`<div class="plan">${L('Сегодня отдых. Следующая тренировка','Rest day. Next workout')}: <b>${dowN()[(nx.dow+6)%7]}, ${fmtDay(nx.date)}</b>, ${ttl(nx.p.title)}.</div>`:`<div class="plan">${L('Это последний день челленджа. Подведи итоги ниже.','This is the last day of the challenge. Check your results below.')}</div>`)+talk('idle',say(nx?'rest':'after',n));
-    }
+    const k=dayDiff(S.start,td),f=wd.find(d=>d.p&&d.date>=S.start)||nextPlanned(S.start)||wd[0];
+    hero=`${lab}<div class="big sm">${L(`Начало через ${k} ${plural(k,'день','дня','дней')}`,`Starts in ${k} ${plural(k,'day','days','days')}`)}</div><div class="plan">${WDN[S.lang][parse(S.start).getDay()]}, ${fmtDay(S.start)}. ${L('Первая тренировка','First workout')}: <b>${ttl(f.p.title)}</b>, ${fmtDay(f.date)}.</div>${talk('idle',say('before',k))}`;
   }else{
-    hero=`${lab}<div class="big sm">${L('30 дней позади','30 days done')}</div>${pbar(31)}<div class="plan">${L('Выполнено тренировок по программе','Program workouts done')}: <b>${okc} ${L('из','of')} ${planned}</b>.</div>${talk('flex',say('after'))}`;
+    const dd=wd.find(d=>d.date===td),wk=dayWorkout(td),dn=wk&&wStats(wk).sets>0;
+    hero=`${lab}<div class="big">${L('Неделя','Week')} ${wkNo}</div>${wbar}`;
+    if(dd.p){
+      if(dn){const s=wStats(wk);hero+=`<div class="plan">${L('Сегодня выполнено','Done today')}: <b>${ttl(dd.p.title)}</b>. ${s.sets} ${nsets(s.sets)}, ${fmtVol(s.vol)}.</div>${talk('flex',say('done',wkNo+tr),`<button class="btn" data-act="ch-open" data-date="${td}">${L('Открыть тренировку','Open workout')}</button>`)}`}
+      else hero+=`<div class="plan">${L('Сегодня','Today')}: <b>${ttl(dd.p.title)}</b></div>${talk('point',say(wk?'doing':'todo',wkNo+tr),`<button class="btn pri" data-act="ch-start" data-date="${td}">${wk?L('Продолжить тренировку','Continue workout'):L('Начать тренировку','Start workout')}</button>`)}`;
+    }else{
+      const nx=nextPlanned(td);
+      hero+=`<div class="plan">${L('Сегодня отдых. Следующая тренировка','Rest day. Next workout')}: <b>${dowN()[(nx.dow+6)%7]}, ${fmtDay(nx.date)}</b>, ${ttl(nx.p.title)}.</div>`+talk('idle',say('rest',wkNo+tr));
+    }
   }
-  const off=(parse(S.start).getDay()+6)%7;
-  let cells='';for(let i=0;i<off;i++)cells+='<span class="cd blank"></span>';
-  for(const d of days){
-    const ok=hasDone(d.date),past=d.date<td;
-    cells+=`<button class="${['cd',d.p?'pl':'rest',ok?'ok':'',d.p&&!ok&&past?'miss':'',d.date===td?'today':'',d.date===S.cdSel?'sel':''].join(' ')}"${d.p?` style="--mc:var(--m${d.p.color})"`:''} data-act="ch-day" data-date="${d.date}" aria-label="${L('День','Day')} ${d.n}, ${fmtDay(d.date)}, ${d.p?ttl(d.p.title):L('отдых','rest')}${ok?', '+L('выполнено','done'):''}"><span class="cn">${d.n}</span><span class="cs">${d.p?(ok?IC.chk:'')+SHORT(d.dow):'·'}</span></button>`;
+  let cells='';
+  for(const d of wd){
+    const ok=done.has(d.date),pre=d.date<S.start,past=d.date<td,pl=d.p&&!pre;
+    cells+=`<button class="${['cd',pl?'pl':'rest',ok?'ok':'',pl&&!ok&&past?'miss':'',pre?'pre':'',d.date===td?'today':'',d.date===S.cdSel?'sel':''].join(' ')}"${pl?` style="--mc:var(--m${d.p.color})"`:''} data-act="ch-day" data-date="${d.date}" aria-label="${dayLong(d.date)}, ${pl?ttl(d.p.title):L('отдых','rest')}${ok?', '+L('выполнено','done'):''}"><span class="cn">${parse(d.date).getDate()}</span><span class="cs">${pl?(ok?IC.chk:'')+SHORT(d.dow):'·'}</span></button>`;
   }
-  const sd=days.find(d=>d.date===S.cdSel),swk=dayWorkout(sd.date);
-  const dh=`<div class="head"><h2>${L('День','Day')} ${sd.n} · ${dowN()[(sd.dow+6)%7]}, ${fmtDay(sd.date)}</h2></div>`;
+  const sd=wd.find(d=>d.date===S.cdSel),swk=dayWorkout(sd.date),spre=sd.date<S.start;
+  const dh=`<div class="head"><h2>${dayLong(sd.date)}</h2></div>`;
   let det;
-  if(sd.p){
+  if(spre){
+    det=`${dh}<div class="empty">${scene('tired','sc')}${L('Тренировки начинаются ','Training starts on ')}${fmtDay(S.start)}.</div>${swk?`<button class="btn" style="width:100%;margin-top:12px" data-act="ch-open" data-date="${sd.date}">${L('Открыть тренировку','Open workout')}</button>`:''}`;
+  }else if(sd.p){
     const gs=[...new Set(sd.p.ex.map(e=>e[1]))];
     det=`${dh}<div class="wcard" style="cursor:default"><div class="dayhead"><div><div class="t">${ttl(sd.p.title)}</div><div class="chips">${gs.map(g=>`<span class="chip"><i style="--mc:${gc(g)}"></i>${gl(g)}</span>`).join('')}</div></div>${scene(SCENE_BY[sd.dow])}</div><ul class="exl">${sd.p.ex.map(([nm,g,r])=>`<li><span>${esc(exn(nm))}</span><span>${repTxt(r)}</span></li>`).join('')}</ul></div>`;
     if(swk)det+=`<button class="btn" style="width:100%" data-act="ch-open" data-date="${sd.date}">${L('Открыть тренировку','Open workout')}</button>`;
@@ -689,22 +699,23 @@ function viewCh(){
     det=`${dh}<div class="empty">${scene('tired','sc')}${L('День отдыха. Восстановление тоже часть программы.','Rest day. Recovery is part of the program too.')}</div>${swk?`<button class="btn" style="width:100%;margin-top:12px" data-act="ch-open" data-date="${sd.date}">${L('Открыть тренировку','Open workout')}</button>`:sd.date<=td?`<button class="btn" style="width:100%;margin-top:12px" data-act="ch-free" data-date="${sd.date}">${L('Записать свою тренировку','Log your own workout')}</button>`:''}`;
   }
   h+=`<section class="hero">${hero}</section>
-  <div class="strip"><div><div class="label">${L('По плану','On plan')}</div><div class="v">${okc}<small> / ${planned}</small></div></div><div><div class="label">${L('Подходов','Sets')}</div><div class="v">${sets}</div></div><div><div class="label">${L('Тоннаж','Tonnage')}</div><div class="v">${volHTML(vol)}</div></div></div>
+  <div class="strip"><div><div class="label">${L('Эта неделя','This week')}</div><div class="v">${wkDone}<small> / ${segs.length}</small></div></div><div><div class="label">${L('Тренировок','Workouts')}</div><div class="v">${tr}</div></div><div><div class="label">${L('Тоннаж','Tonnage')}</div><div class="v">${volHTML(vol)}</div></div></div>
+  <div class="wnav"><button class="ib" data-act="wk-prev" aria-label="${L('Предыдущая неделя','Previous week')}">${IC.back}</button><span class="wr">${fmtDay(first)} – ${fmtDay(last)}</span>${S.weekOff?`<button class="pill" data-act="wk-now">${L('Сегодня','Today')}</button>`:''}<button class="ib" data-act="wk-next" aria-label="${L('Следующая неделя','Next week')}">${IC.next}</button></div>
   <div class="cal"><div class="dow">${dowN().map(d=>`<span>${d}</span>`).join('')}</div><div class="cgrid">${cells}</div></div>
   <div class="legend">${[1,3,5].map(k=>`<span><i style="--mc:var(--m${PROGRAM[k].color})"></i>${SHORT(k)} ${ttl(PROGRAM[k].title).toLowerCase()}</span>`).join('')}</div>
   <section class="daypanel">${det}</section>
-  ${sets?`<section class="daypanel"><button class="btn ${state==='after'?'pri':''}" style="width:100%" data-act="recap">${L('Мои итоги: картинка для сторис','My results: story image')}</button></section>`:''}`;
+  ${sets?`<section class="daypanel"><button class="btn" style="width:100%" data-act="recap">${L('Мои итоги: картинка для сторис','My results: story image')}</button></section>`:''}`;
   return h+chFooter();
 }
 function helpHTML(){
   const nm=S.gender==='f'?'':` <b>${L('Борис','Boris')}</b>`;
   const intro=S.gender==='f'?L('Сейчас покажу, как тут всё устроено.','Let me show you how everything works.'):L('Я <b>Борис</b>. Сейчас покажу, как тут всё устроено.','I’m <b>Boris</b>. Let me show you how everything works.');
   if(S.lang==='en')return `<div class="hh">${spr('phone')}<div class="bubble">${intro}</div></div><h3 id="h-start">Getting started</h3>
-  <ol><li>On the “Challenge” tab pick a start date (a Monday is best).</li><li>On a workout day open “Challenge” and tap “Start workout”: the day’s program fills in by itself.</li><li>After each set enter the weight and reps and tap the check mark. The rest timer starts.</li></ol>
+  <ol><li>On the “Program” tab pick the date you start training (a Monday is best).</li><li>On a workout day open “Program” and tap “Start workout”: the day’s program fills in by itself.</li><li>After each set enter the weight and reps and tap the check mark. The rest timer starts.</li></ol>
   <h3 id="h-log">Logging a workout</h3>
-  <ul><li>The “Last time” line shows what you did in the previous workout. Your goal: a little better.</li><li>“+ Set” and “− Set” change the number of sets, “Remove” deletes an exercise, “+ Add exercise” adds your own.</li><li>For bodyweight exercises (pull-ups, push-ups) leave the weight empty and enter only reps.</li><li>The rest timer can be set to 60, 90, 120 or 180 seconds. In the last 5 seconds it ticks, then it beeps and hides itself.</li><li>Missed a day? Tap it in the challenge calendar and choose “Log missed workout”.</li></ul>
+  <ul><li>The “Last time” line shows what you did in the previous workout. Your goal: a little better.</li><li>“+ Set” and “− Set” change the number of sets, “Remove” deletes an exercise, “+ Add exercise” adds your own.</li><li>For bodyweight exercises (pull-ups, push-ups) leave the weight empty and enter only reps.</li><li>The rest timer can be set to 60, 90, 120 or 180 seconds. In the last 5 seconds it ticks, then it beeps and hides itself.</li><li>Missed a day? Tap it in the program calendar and choose “Log missed workout”.</li></ul>
   <h3 id="h-prog">Progress and results</h3>
-  <ul><li>The “Progress” tab: a chart per exercise, sets per muscle group and personal records.</li><li>“My results” makes an image for stories: before and after. Post it and tag the challenge account.</li></ul>
+  <ul><li>The “Progress” tab: a chart per exercise, sets per muscle group and personal records.</li><li>“My results” makes an image for stories: before and after. Post it and tag our account.</li></ul>
   <h3 id="h-install">Install on your phone</h3>
   <p><b>iPhone (Safari):</b> tap “Share” (the square with an arrow), choose “Add to Home Screen”, then “Add”. Launch the app from its icon. This matters: this way iPhone won’t delete your data if you don’t visit for a week.</p>
   <p><b>Android (Chrome):</b> the ⋮ menu, then “Install app” or “Add to Home screen”.</p>
@@ -714,11 +725,11 @@ function helpHTML(){
   <h3>Important</h3>
   <p>Choose weights that suit you. If you feel pain or get injured, stop and see a doctor. Ask any questions about the app in the club chat.</p>`;
   return `<div class="hh">${spr('phone')}<div class="bubble">${intro}</div></div><h3 id="h-start">С чего начать</h3>
-  <ol><li>На вкладке «Челлендж» выбери дату старта (лучше понедельник).</li><li>В день тренировки открой «Челлендж» и нажми «Начать тренировку»: программа дня подставится сама.</li><li>После каждого подхода впиши вес и повторы и нажми галочку. Включится таймер отдыха.</li></ol>
+  <ol><li>На вкладке «Программа» выбери дату начала тренировок (лучше понедельник).</li><li>В день тренировки открой «Программа» и нажми «Начать тренировку»: программа дня подставится сама.</li><li>После каждого подхода впиши вес и повторы и нажми галочку. Включится таймер отдыха.</li></ol>
   <h3 id="h-log">Как записывать тренировку</h3>
-  <ul><li>Строка «В прошлый раз» показывает, что было на прошлой тренировке. Твоя цель: чуть лучше.</li><li>Кнопки «+ Подход» и «− Подход» меняют число подходов, «Убрать» удаляет упражнение, «+ Добавить упражнение» добавляет своё.</li><li>Упражнение без веса (подтягивания, отжимания): оставь вес пустым и пиши только повторы.</li><li>Таймер отдыха переключается кнопками 60, 90, 120 и 180 секунд. В последние 5 секунд он тикает, потом даёт сигнал и сам пропадает.</li><li>Пропустил день? Нажми на него в календаре челленджа и «Записать пропущенную».</li></ul>
+  <ul><li>Строка «В прошлый раз» показывает, что было на прошлой тренировке. Твоя цель: чуть лучше.</li><li>Кнопки «+ Подход» и «− Подход» меняют число подходов, «Убрать» удаляет упражнение, «+ Добавить упражнение» добавляет своё.</li><li>Упражнение без веса (подтягивания, отжимания): оставь вес пустым и пиши только повторы.</li><li>Таймер отдыха переключается кнопками 60, 90, 120 и 180 секунд. В последние 5 секунд он тикает, потом даёт сигнал и сам пропадает.</li><li>Пропустил день? Нажми на него в календаре программы и «Записать пропущенную».</li></ul>
   <h3 id="h-prog">Прогресс и итоги</h3>
-  <ul><li>Вкладка «Прогресс»: график по упражнению, подходы по группам мышц и личные рекорды.</li><li>Кнопка «Мои итоги» делает картинку для сторис: что было и что стало. Выложи и отметь аккаунт челленджа.</li></ul>
+  <ul><li>Вкладка «Прогресс»: график по упражнению, подходы по группам мышц и личные рекорды.</li><li>Кнопка «Мои итоги» делает картинку для сторис: что было и что стало. Выложи и отметь наш аккаунт.</li></ul>
   <h3 id="h-install">Как поставить на телефон</h3>
   <p><b>iPhone (Safari):</b> нажми «Поделиться» (квадрат со стрелкой), выбери «На экран “Домой”», затем «Добавить». Запускай приложение с иконки. Это важно: так iPhone не удаляет данные, если ты неделю не заходил.</p>
   <p><b>Android (Chrome):</b> меню ⋮, затем «Установить приложение» или «Добавить на главный экран».</p>
@@ -738,20 +749,20 @@ function settingsHTML(){
 }
 /* итоги: картинка для сторис */
 function recapData(){
-  const st=S.start,en=addDays(st,29),td=todayISO();
-  const ws=list().filter(w=>w.date>=st&&w.date<=en);
+  const td=todayISO(),st=S.start<td?S.start:td;
+  const ws=list().filter(w=>w.date>=st&&w.date<=td);
   let tr=0,sets=0,vol=0;ws.forEach(w=>{const s=wStats(w);if(s.sets){tr++;sets+=s.sets;vol+=s.vol}});
   const names=[...new Set(ws.flatMap(w=>w.exercises.filter(e=>doneSets(e).length).map(e=>e.name)))];
   const rows=[];
   for(const name of names){
-    const hs=history(name).filter(h=>h.date>=st&&h.date<=en);if(!hs.length)continue;
+    const hs=history(name).filter(h=>h.date>=st&&h.date<=td);if(!hs.length)continue;
     const bw=hs.every(h=>h.sets.every(s=>!(+s.w)));
     const a=sessionVals(hs[0],bw).weight,b=sessionVals(hs[hs.length-1],bw).weight;
     rows.push({name,n:hs.length,bw,a,b,d:b-a,pc:a?(b-a)/a:0});
   }
   rows.sort((p,q)=>(q.n>1)-(p.n>1)||q.pc-p.pc||q.n-p.n);
-  const dn=Math.min(30,Math.max(1,dayDiff(td,st)+1)),fin=dayDiff(td,st)>=29;
-  return{tr,sets,vol,rows:rows.slice(0,5),fin,sub:fin?L('ИТОГИ · 30 ДНЕЙ ПРОЙДЕНО','RESULTS · 30 DAYS DONE'):L(`ИТОГИ · ДЕНЬ ${dn} ИЗ 30`,`RESULTS · DAY ${dn} OF 30`)};
+  const since=fmtShort(st).toUpperCase();
+  return{tr,sets,vol,rows:rows.slice(0,5),sub:L(`ИТОГИ · С ${since}`,`RESULTS · SINCE ${since}`)};
 }
 async function buildRecap(){
   const R=recapData(),W=1080,H=1920,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
@@ -777,7 +788,7 @@ async function buildRecap(){
     x.fillStyle=MUTE;x.font=`400 32px ${BF}`;x.fillText(l,100,py+132);
   });
   if(img){const sc=2,bw=img.width*sc,bh=img.height*sc,bx=Math.round(836-bw/2),by=240;x.drawImage(img,bx,by,bw,bh)}
-  const bub=R.fin||R.tr>=12?L('ВОТ ЭТО СИЛА!','WHAT STRENGTH!'):L('ТАК ДЕРЖАТЬ!','KEEP IT UP!');
+  const bub=R.tr>=12?L('ВОТ ЭТО СИЛА!','WHAT STRENGTH!'):L('ТАК ДЕРЖАТЬ!','KEEP IT UP!');
   panel(684,96,324,104,CREAM);x.fillStyle='#14101c';x.textAlign='center';fit(bub,'700 #px Rubik',290,38);x.fillText(bub,846,160);
   x.fillStyle=CREAM;x.fillRect(838,206,12,6);x.fillRect(844,212,12,6);x.fillRect(850,218,12,6);
   x.textAlign='left';
@@ -802,7 +813,7 @@ async function buildRecap(){
     y+=160;
   }
   x.textAlign='center';
-  x.fillStyle=CREAM;x.font=`24px ${HF}`;x.fillText(`${title} · 30 ${L('ДНЕЙ','DAYS')}`,W/2,1840);
+  x.fillStyle=CREAM;x.font=`24px ${HF}`;x.fillText(title,W/2,1840);
   if(TAG){x.fillStyle=ACC;x.font=`28px ${HF}`;x.fillText(TAG,W/2,1892)}
   x.fillStyle=ACC;x.fillRect(0,H-24,W,24);
   const blob=await new Promise(res=>c.toBlob(res,'image/png'));
@@ -876,7 +887,7 @@ function viewLog(){
       <div class="ex-actions"><button class="btn sm" data-act="addset" data-ex="${ex.id}">+ ${L('Подход','Set')}</button><button class="btn sm" data-act="rmset" data-ex="${ex.id}"${ex.sets.length?'':' disabled'}>− ${L('Подход','Set')}</button><button class="btn sm" data-act="doneall" data-ex="${ex.id}">${L('Все выполнены','All done')}</button><button class="btn sm danger" data-act="rmex" data-ex="${ex.id}">${S.confirmEx===ex.id?L('Точно убрать?','Remove it?'):L('Убрать','Remove')}</button></div>
     </section>`;
   }).join('');
-  return `<div class="top"><button class="back" data-act="back">${IC.back}${S.from==='ch'?L('Челлендж','Challenge'):L('Календарь','Calendar')}</button><button class="btn sm danger" data-act="del-w">${S.confirmDel?L('Точно удалить?','Delete for sure?'):L('Удалить тренировку','Delete workout')}</button></div>
+  return `<div class="top"><button class="back" data-act="back">${IC.back}${S.from==='ch'?L('Программа','Program'):L('Календарь','Calendar')}</button><button class="btn sm danger" data-act="del-w">${S.confirmDel?L('Точно удалить?','Delete for sure?'):L('Удалить тренировку','Delete workout')}</button></div>
   <div class="sync" id="sync"></div>
   <input class="wtitle" id="wtitle" value="${esc(w.title?ttl(w.title):'')}" placeholder="${esc(groupsOf(w).map(gl).join(' + ')||L('Название тренировки','Workout name'))}" maxlength="60" aria-label="${L('Название тренировки','Workout name')}">
   <div class="wmeta"><input class="wdate" id="wdate" type="date" value="${w.date}" aria-label="${L('Дата','Date')}"><div class="chips" style="margin:0">${groupsOf(w).map(g=>`<span class="chip"><i style="--mc:${gc(g)}"></i>${gl(g)}</span>`).join('')}</div></div>
@@ -957,7 +968,7 @@ function paintSheet(){
     const seen=new Set(),rec=[];
     for(const w of list().slice().reverse()){const k=wName(w);if(seen.has(k)||!w.exercises.length)continue;seen.add(k);rec.push(w);if(rec.length>=4)break}
     el.innerHTML=`${shHead(L('Новая тренировка','New workout'))}<p class="sub">${fmtDay(s.date)}</p>
-    <h3 style="margin-top:0">${L('По программе челленджа','From the challenge program')}</h3>${[1,3,5].map(k=>`<button class="opt" data-act="new-prog" data-dow="${k}"><i style="--mc:var(--m${PROGRAM[k].color})"></i><span>${SHORT(k)} · ${ttl(PROGRAM[k].title)}<br><small>${PROGRAM[k].ex.length} ${L('упражнений','exercises')}</small></span></button>`).join('')}
+    <h3 style="margin-top:0">${L('По программе','From the program')}</h3>${[1,3,5].map(k=>`<button class="opt" data-act="new-prog" data-dow="${k}"><i style="--mc:var(--m${PROGRAM[k].color})"></i><span>${SHORT(k)} · ${ttl(PROGRAM[k].title)}<br><small>${PROGRAM[k].ex.length} ${L('упражнений','exercises')}</small></span></button>`).join('')}
     <h3>${L('Или своя','Or your own')}</h3><button class="btn" style="width:100%" data-act="new-empty">${L('Пустая тренировка','Empty workout')}</button>
     ${rec.length?`<h3>${L('Повторить прошлую','Repeat a previous one')}</h3>${rec.map(w=>`<button class="opt" data-act="new-from" data-id="${w.id}"><span>${esc(wName(w))}<br><small>${w.exercises.length} ${U().ex} · ${fmtDay(w.date)}</small></span></button>`).join('')}`:''}</div>`;
   }else if(s.type==='help'){
@@ -966,7 +977,7 @@ function paintSheet(){
   }else if(s.type==='settings'){
     el.innerHTML=`${shHead(L('Настройки','Settings'),'help')}${settingsHTML()}</div>`;
   }else if(s.type==='recap'){
-    el.innerHTML=`${shHead(L('Мои итоги','My results'),'recap')}<p class="sub">${L('Картинка для сторис. Отметь аккаунт челленджа.','An image for stories. Tag the challenge account.')}</p>${s.url?`<img class="pic" src="${s.url}" alt="${L('Итоги челленджа','Challenge results')}"><div class="ex-actions"><button class="btn pri" data-act="recap-share">${L('Поделиться','Share')}</button><button class="btn" data-act="recap-save">${L('Скачать картинку','Download image')}</button></div>`:`<div class="empty">${L('Собираю картинку…','Building the image…')}</div>`}</div>`;
+    el.innerHTML=`${shHead(L('Мои итоги','My results'),'recap')}<p class="sub">${L('Картинка для сторис. Отметь наш аккаунт.','An image for stories. Tag our account.')}</p>${s.url?`<img class="pic" src="${s.url}" alt="${L('Мои итоги','My results')}"><div class="ex-actions"><button class="btn pri" data-act="recap-share">${L('Поделиться','Share')}</button><button class="btn" data-act="recap-save">${L('Скачать картинку','Download image')}</button></div>`:`<div class="empty">${L('Собираю картинку…','Building the image…')}</div>`}</div>`;
   }else if(s.type==='ex'){
     el.innerHTML=`${shHead(L('Упражнение','Exercise'))}
     <input class="q" id="exq" type="search" placeholder="${L('Поиск или своё название','Search or type your own name')}" autocomplete="off" value="${esc(s.q)}">
@@ -1153,6 +1164,9 @@ document.addEventListener('click',e=>{
    case'set-sound':S.sound=b.dataset.v==='1';lsSet(LSS,S.sound?'1':'0');if(S.sound)tone(880,.08,.05);paintSheet();break;
    case'settings':openSheet({type:'settings'});break;
    case'ch-day':S.cdSel=b.dataset.date;render();break;
+   case'wk-prev':S.weekOff=(S.weekOff||0)-1;S.cdSel='';render();break;
+   case'wk-next':S.weekOff=(S.weekOff||0)+1;S.cdSel='';render();break;
+   case'wk-now':S.weekOff=0;S.cdSel='';render();break;
    case'ch-start':case'ch-open':openProgWorkout(b.dataset.date);break;
    case'ch-free':openSheet({type:'new',date:b.dataset.date});break;
    case'start-set':setStart(b.dataset.date);break;
