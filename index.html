@@ -552,8 +552,8 @@ let wl=null;
 async function wake(on){try{if(on&&!wl&&document.visibilityState==='visible'){wl=await navigator.wakeLock.request('screen');wl.addEventListener('release',()=>{wl=null})}else if(!on&&wl){await wl.release();wl=null}}catch(e){}}
 
 /* ---------- выбор пола при первом входе ---------- */
-const SPS={m:{idle:[61,190],flex:[112,190],walk:[67,200],point:[117,200],phone:[122,200]},f:{idle:[66,190],flex:[66,190],walk:[70,200],point:[70,200],phone:[70,200]}};
-const SCS={m:{squat:[88,143],bench:[88,126],pull:[88,158],tired:[88,158]},f:{squat:[88,153],bench:[88,153],pull:[88,153],tired:[88,153]}};
+const SPS={m:{idle:[61,190],flex:[112,190],walk:[67,200],point:[117,200],phone:[122,200]},f:{idle:[66,190],flex:[79,190],walk:[70,200],point:[112,200],phone:[104,200]}};
+const SCS={m:{squat:[88,143],bench:[88,126],pull:[88,158],tired:[88,158]},f:{squat:[88,141],bench:[88,113],pull:[88,158],tired:[88,161]}};
 const GK=()=>S.gender==='f'?'f':'m';
 const sprOf=(g,n)=>`img/${g==='f'?'girl':'boris'}_${n}_s.png`;
 const spr=(n,cls='',g=GK())=>`<img${cls?` class="${cls}"`:''} src="${sprOf(g,n)}" width="${SPS[g][n][0]}" height="${SPS[g][n][1]}" alt="">`;
@@ -626,7 +626,7 @@ function chFooter(){
   return `<section class="daypanel"><div class="head"><h2>${L('Ещё','More')}</h2></div><div class="ex-actions"><button class="btn sm" data-act="settings">${L('Настройки','Settings')}</button><button class="btn sm" data-act="help">${L('Как пользоваться','How to use')}</button>${deferredInstall&&!isStandalone()?`<button class="btn sm" data-act="install">${L('Установить приложение','Install app')}</button>`:''}${S.start&&!S.editStart?`<button class="btn sm" data-act="edit-start">${L('Изменить дату начала','Change start date')}</button>`:''}</div></section>${backupSection()}`;
 }
 const SAYS={
- setup:{ru:['Привет! Я <b>Борис</b>. Выбери дату начала тренировок, и погнали.'],ruf:['Привет! Выбери дату начала тренировок, и погнали.'],en:['Hey! I’m <b>Boris</b>. Pick the date you start training and let’s go.'],enf:['Hey! Pick the date you start training and let’s go.']},
+ setup:{ru:['Привет! Я <b>Борис</b>. Выбери дату начала тренировок, и погнали.'],ruf:['Привет! Я <b>Лейла</b>. Выбери дату начала тренировок, и погнали.'],en:['Hey! I’m <b>Boris</b>. Pick the date you start training and let’s go.'],enf:['Hey! I’m <b>Leila</b>. Pick the date you start training and let’s go.']},
  before:{ru:['Разминайся. Скоро начинаем!','Железо уже скучает по тебе.'],en:['Warm up. We start soon!','The iron already misses you.']},
  todo:{ru:['Ну что, качаем? Железо ждёт!','Не стой столбом. Жми «Начать тренировку».','Блины сами себя не поднимут.','Один подход, и ты уже в деле.'],en:['Ready to lift? The iron is waiting!','Don’t just stand there. Hit “Start workout”.','The plates won’t lift themselves.','One set and you’re already in.']},
  doing:{ru:['Ты начал, так дотяни до конца!'],ruf:['Ты начала, так дотяни до конца!'],en:['You started, so finish it!']},
@@ -708,8 +708,7 @@ function viewCh(){
   return h+chFooter();
 }
 function helpHTML(){
-  const nm=S.gender==='f'?'':` <b>${L('Борис','Boris')}</b>`;
-  const intro=S.gender==='f'?L('Сейчас покажу, как тут всё устроено.','Let me show you how everything works.'):L('Я <b>Борис</b>. Сейчас покажу, как тут всё устроено.','I’m <b>Boris</b>. Let me show you how everything works.');
+  const intro=S.gender==='f'?L('Я <b>Лейла</b>. Сейчас покажу, как тут всё устроено.','I’m <b>Leila</b>. Let me show you how everything works.'):L('Я <b>Борис</b>. Сейчас покажу, как тут всё устроено.','I’m <b>Boris</b>. Let me show you how everything works.');
   if(S.lang==='en')return `<div class="hh">${spr('phone')}<div class="bubble">${intro}</div></div><h3 id="h-start">Getting started</h3>
   <ol><li>On the “Program” tab pick the date you start training (a Monday is best).</li><li>On a workout day open “Program” and tap “Start workout”: the day’s program fills in by itself.</li><li>After each set enter the weight and reps and tap the check mark. The rest timer starts.</li></ol>
   <h3 id="h-log">Logging a workout</h3>
