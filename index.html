@@ -8,247 +8,271 @@
 <meta name="apple-mobile-web-app-title" content="Тоннаж">
 <meta name="application-name" content="Тоннаж">
 <meta name="description" content="Тоннаж: записывай подходы, смотри прогресс.">
-<meta name="theme-color" content="#eef1f4" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0e1215" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#1b1a24">
+<meta name="color-scheme" content="dark">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<style>:root{color-scheme:light dark;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}body{margin:0}[hidden]{display:none!important}</style>
+<style>:root{color-scheme:dark;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}body{margin:0}[hidden]{display:none!important}</style>
 <title>Тоннаж</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Oswald:wght@500;600&display=swap">
+<link rel="preload" href="fonts/ps2p-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/tiny5-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-/* Layout: одна колонка до 640px, нижняя панель вкладок, листы снизу. Журнал на бумаге: тонкие линии, крупные цифры. */
+/* ТОННАЖ · пиксельный стиль. Герой: Бро Борис (розовая майка, чёрные усы). Контуры и тени без размытия, углы «со ступенькой». */
+@font-face{font-family:"Tiny5";font-weight:400;font-display:swap;src:url(fonts/tiny5-cyrillic.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Tiny5";font-weight:400;font-display:swap;src:url(fonts/tiny5-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Press Start 2P";font-weight:400;font-display:swap;src:url(fonts/ps2p-cyrillic.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Press Start 2P";font-weight:400;font-display:swap;src:url(fonts/ps2p-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
 :root{
-  --bg:#eef1f4; --surface:#ffffff; --surface2:#f4f6f8; --ink:#12171c; --ink2:#525d69; --mute:#7d8793;
-  --line:#dbe1e7; --accent:#12171c; --on-accent:#ffffff; --pr:#8a5a00; --pr-bg:#fbeecb; --danger:#c2362f;
-  --m1:#2a78d6; --m2:#eb6834; --m3:#1baf7a; --m4:#eda100; --m5:#e87ba4; --m6:#008300; --m7:#4a3aa7; --m8:#e34948;
-  --f-head:"Oswald","Arial Narrow",Impact,sans-serif; --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --tabh:60px;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#0e1215; --surface:#171d22; --surface2:#1e262c; --ink:#edf1f4; --ink2:#a9b3bd; --mute:#76818c;
-    --line:#2a343c; --accent:#edf1f4; --on-accent:#0e1215; --pr:#f0b43a; --pr-bg:#3a2d10; --danger:#ef6b64;
-    --m1:#3987e5; --m2:#d95926; --m3:#199e70; --m4:#c98500; --m5:#d55181; --m6:#008300; --m7:#9085e9; --m8:#e66767;
-    color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#0e1215; --surface:#171d22; --surface2:#1e262c; --ink:#edf1f4; --ink2:#a9b3bd; --mute:#76818c;
-  --line:#2a343c; --accent:#edf1f4; --on-accent:#0e1215; --pr:#f0b43a; --pr-bg:#3a2d10; --danger:#ef6b64;
-  --m1:#3987e5; --m2:#d95926; --m3:#199e70; --m4:#c98500; --m5:#d55181; --m6:#008300; --m7:#9085e9; --m8:#e66767;
-  color-scheme:dark;
+  --bg:#1b1a24; --bg2:#201f2b; --surface:#272535; --surface2:#34304a; --ink:#f6f1e7; --ink2:#c9c4dc; --mute:#948eae;
+  --o:#0b0a10; --line:#0b0a10; --accent:#ff3db8; --accent2:#c42a8f; --on-accent:#14101c; --bub:#f6f1e7;
+  --ok:#45e09b; --danger:#ff6a62; --pr:#ffd23f; --pr-bg:#4a3b0a;
+  --m1:#4aa8ff; --m2:#ff7a3d; --m3:#3ddc97; --m4:#ffd23f; --m5:#c77dff; --m6:#8fe04a; --m7:#7f86ff; --m8:#ff5a52;
+  --f-head:"Press Start 2P","Courier New",monospace; --f-body:"Tiny5",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --ob:0 -3px 0 0 var(--o),0 3px 0 0 var(--o),-3px 0 0 0 var(--o),3px 0 0 0 var(--o);
+  --bev:inset 0 -4px 0 0 rgba(0,0,0,.30),inset 0 4px 0 0 rgba(255,255,255,.07);
+  --tabh:66px;
 }
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45;
-  padding-inline:16px;padding-block:20px calc(var(--tabh) + 110px);-webkit-text-size-adjust:100%}
+html{color-scheme:dark}
+body{background-color:var(--bg);
+  background-image:linear-gradient(45deg,var(--bg2) 25%,transparent 25%,transparent 75%,var(--bg2) 75%),linear-gradient(45deg,var(--bg2) 25%,transparent 25%,transparent 75%,var(--bg2) 75%);
+  background-size:8px 8px;background-position:0 0,4px 4px;
+  color:var(--ink);font-family:var(--f-body);font-size:20px;line-height:1.35;-webkit-font-smoothing:none;font-synthesis:none;
+  padding-inline:18px;padding-block:20px calc(var(--tabh) + 120px);-webkit-text-size-adjust:100%}
 #app{max-width:640px;margin-inline:auto}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer;background:none;border:0;padding:0}
-:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
-h1,h2,h3{margin:0;font-weight:600;text-wrap:balance}
-.num{font-family:var(--f-head);font-variant-numeric:tabular-nums;letter-spacing:.01em}
+:focus-visible{outline:3px dashed var(--accent);outline-offset:3px}
+h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
+img{image-rendering:pixelated}
+.pxi{display:block;fill:currentColor;width:1em;height:auto}
+.num{font-family:var(--f-head);font-variant-numeric:tabular-nums}
 .mute{color:var(--mute)} .ink2{color:var(--ink2)}
-.label{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);font-weight:600}
+.label{font-family:var(--f-head);font-size:8px;line-height:1.5;letter-spacing:0;text-transform:uppercase;color:var(--mute)}
 
-/* header rows */
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
-.top h1{font-family:var(--f-head);font-size:30px;text-transform:uppercase;letter-spacing:.02em;line-height:1.1}
-.top .nav{display:flex;gap:6px;align-items:center}
-.ib{width:38px;height:38px;border-radius:8px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center}
-.ib svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.pill{height:38px;padding-inline:14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);font-weight:500;font-size:13px}
-.sync{font-size:12px;color:var(--mute);margin:-8px 0 14px}
-.banner{background:var(--surface);border:1px dashed var(--mute);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:13px;color:var(--ink2);display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-.btn{height:44px;padding-inline:18px;border-radius:8px;font-weight:600;border:1px solid var(--line);background:var(--surface)}
-.btn.pri{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
-.btn.sm{height:34px;padding-inline:12px;font-size:13px}
+/* шапки */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.top h1{font-family:var(--f-head);font-size:16px;line-height:1.5;text-transform:uppercase;color:var(--accent);text-shadow:3px 3px 0 var(--o)}
+.top .nav{display:flex;gap:8px;align-items:center}
+.ib{width:42px;height:42px;background:var(--surface2);box-shadow:var(--ob),var(--bev);display:grid;place-items:center;font-size:26px;line-height:1}
+.ib .pxi{width:16px}
+.ib:active{transform:translateY(3px)}
+.pill{height:42px;padding-inline:14px;background:var(--surface2);box-shadow:var(--ob),var(--bev);font-weight:600;font-size:18px}
+.pill:active{transform:translateY(3px)}
+.sync{font-size:16px;color:var(--mute);margin:-6px 0 14px;min-height:1px}
+.banner{background:var(--surface);box-shadow:var(--ob),var(--bev);padding:12px 14px;margin-bottom:18px;font-size:18px;color:var(--ink2);display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.btn{min-height:46px;padding:10px 18px;background:var(--surface2);color:var(--ink);font-weight:600;font-size:20px;line-height:1.15;
+  box-shadow:var(--ob),0 6px 0 0 var(--o),inset 0 -4px 0 0 rgba(0,0,0,.30),inset 0 4px 0 0 rgba(255,255,255,.12);margin-bottom:6px}
+.btn:active{transform:translateY(4px);box-shadow:var(--ob),0 2px 0 0 var(--o),inset 0 4px 0 0 rgba(0,0,0,.30)}
+.btn.pri{background:var(--accent);color:var(--on-accent);box-shadow:var(--ob),0 6px 0 0 var(--o),inset 0 -4px 0 0 rgba(120,10,80,.45),inset 0 4px 0 0 rgba(255,255,255,.28)}
+.btn.sm{min-height:36px;padding:6px 12px;font-size:18px}
 .btn.danger{color:var(--danger)}
 .btn[disabled]{opacity:.45;cursor:default}
 
-/* stats strip */
-.strip{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:10px;background:var(--surface);margin-bottom:14px}
+/* плашка статистики */
+.strip{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface);box-shadow:var(--ob),var(--bev);margin-bottom:18px}
 .strip>div{padding:10px 12px;min-width:0}
-.strip>div+div{border-left:1px solid var(--line)}
-.strip .v{font-family:var(--f-head);font-size:26px;line-height:1.15;font-variant-numeric:tabular-nums}
-.strip .v small{font-size:13px;color:var(--mute);font-family:var(--f-body)}
+.strip>div+div{border-left:3px solid var(--o)}
+.strip .v{font-family:var(--f-head);font-size:16px;line-height:1.5;margin-top:4px;color:var(--ink);white-space:nowrap}
+.strip .v small{font-size:16px;color:var(--mute);font-family:var(--f-body)}
 
-/* calendar */
-.cal{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px}
+/* календарь */
+.cal{background:var(--surface);box-shadow:var(--ob),var(--bev);padding:10px}
 .dow,.days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.dow span{font-size:11px;text-align:center;color:var(--mute);letter-spacing:.06em;text-transform:uppercase;padding-bottom:6px}
-.day{min-height:52px;border-radius:8px;border:1px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;padding-top:6px}
-.day.blank{pointer-events:none}
-.day .dn{font-family:var(--f-head);font-size:16px;font-variant-numeric:tabular-nums;line-height:1}
-.day.has{background:var(--surface2)}
-.day.today .dn{background:var(--accent);color:var(--on-accent);border-radius:50%;width:22px;height:22px;display:grid;place-items:center;margin-top:-3px;margin-bottom:-1px}
-.day.sel{border-color:var(--ink)}
+.dow span{font-family:var(--f-head);font-size:8px;text-align:center;color:var(--mute);text-transform:uppercase;padding-bottom:8px}
+.day{min-height:54px;background:var(--surface2);border:2px solid var(--o);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:5px;padding-top:6px}
+.day.blank{pointer-events:none;background:none;border-color:transparent}
+.day .dn{font-family:var(--f-head);font-size:8px;line-height:16px;height:16px;min-width:16px;text-align:center}
+.day.has{background:#3d3858}
+.day.today .dn{background:var(--accent);color:var(--on-accent);padding-inline:2px}
+.day.sel{outline:3px solid var(--ink);outline-offset:-1px}
 .dots{display:flex;gap:3px;height:7px;align-items:center}
-.dots i{width:7px;height:7px;border-radius:50%;background:var(--mc)}
-.dots b{font-size:9px;line-height:1;color:var(--mute)}
-.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:12px 2px 0;font-size:12px;color:var(--ink2)}
-.legend span{display:inline-flex;align-items:center;gap:6px}
-.legend i{width:9px;height:9px;border-radius:50%;background:var(--mc);display:inline-block}
-.daypanel{margin-top:18px}
-.daypanel .head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:10px}
-.daypanel h2{font-family:var(--f-head);font-size:20px;text-transform:uppercase;letter-spacing:.02em}
-.wcard{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:8px}
-.wcard .t{font-weight:600}
-.wcard .m{font-size:13px;color:var(--ink2);margin-top:2px}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;border:1px solid var(--line);border-radius:99px;padding:2px 10px 2px 8px;background:var(--surface);color:var(--ink2);height:26px}
-.chip i{width:8px;height:8px;border-radius:50%;background:var(--mc)}
-button.chip{cursor:pointer;height:32px;padding-inline:12px;font-size:13px}
-button.chip[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
-button.chip[aria-pressed="true"] i{box-shadow:0 0 0 1.5px var(--on-accent)}
-.empty{border:1px dashed var(--line);border-radius:10px;padding:18px;text-align:center;color:var(--ink2);font-size:14px}
-.empty .btn{margin-top:12px}
+.dots i{width:7px;height:7px;background:var(--mc)}
+.dots b{font-size:12px;line-height:1;color:var(--mute)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:16px 2px 0;font-size:17px;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:10px;height:10px;background:var(--mc);display:inline-block;box-shadow:0 0 0 2px var(--o)}
+.daypanel{margin-top:24px}
+.daypanel .head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.daypanel h2{font-family:var(--f-head);font-size:12px;line-height:1.5;text-transform:uppercase;color:var(--ink)}
+.wcard{display:block;width:100%;text-align:left;background:var(--surface);box-shadow:var(--ob),var(--bev);padding:12px 14px;margin-bottom:14px}
+.wcard .t{font-weight:700;font-size:22px}
+.wcard .m{font-size:17px;color:var(--ink2);margin-top:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{display:inline-flex;align-items:center;gap:7px;font-size:17px;background:var(--surface2);box-shadow:0 0 0 2px var(--o);padding:2px 9px 2px 8px;height:28px;color:var(--ink2)}
+.chip i{width:8px;height:8px;background:var(--mc)}
+button.chip{cursor:pointer;height:34px;padding-inline:12px;font-size:18px}
+button.chip[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);box-shadow:0 0 0 2px var(--o)}
+button.chip[aria-pressed="true"] i{box-shadow:0 0 0 2px var(--o)}
+.empty{background:var(--surface);border:3px dashed var(--mute);padding:18px;text-align:center;color:var(--ink2);font-size:19px}
+.empty .btn{margin-top:14px}
+.empty img.sc{display:block;margin:0 auto 12px;border:3px solid var(--o)}
 
-/* workout log */
-.back{display:inline-flex;align-items:center;gap:4px;color:var(--ink2);font-size:13px;font-weight:500;height:32px}
-.back svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.wtitle{width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;font-family:var(--f-head);font-size:26px;text-transform:uppercase;letter-spacing:.02em;padding:4px 0 6px;border-radius:0}
+/* тренировка */
+.back{display:inline-flex;align-items:center;gap:8px;color:var(--ink2);font-weight:600;font-size:19px;height:34px}
+.back .pxi{width:10px}
+.wtitle{width:100%;border:0;border-bottom:4px solid var(--o);background:transparent;font-family:var(--f-head);font-size:16px;line-height:1.5;text-transform:uppercase;padding:6px 0 10px;border-radius:0;color:var(--accent)}
 .wtitle::placeholder{color:var(--mute)}
-.wmeta{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:10px 0 4px;flex-wrap:wrap}
-.wdate{border:1px solid var(--line);background:var(--surface);border-radius:8px;height:36px;padding-inline:10px;font-size:14px}
-.rest-pick{display:flex;align-items:center;gap:6px;margin:4px 0 16px;flex-wrap:wrap}
+.wmeta{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0 6px;flex-wrap:wrap}
+.wdate{background:var(--surface2);box-shadow:var(--ob);border:0;height:38px;padding-inline:10px;font-size:18px;color-scheme:dark}
+.rest-pick{display:flex;align-items:center;gap:8px;margin:6px 0 20px;flex-wrap:wrap}
 .rest-pick .label{margin-right:4px}
-.ex{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.ex{background:var(--surface);box-shadow:var(--ob),var(--bev);padding:14px;margin-bottom:18px}
 .ex-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-.ex h3{font-size:16px;line-height:1.25}
-.tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);margin-top:3px}
-.tag i{width:8px;height:8px;border-radius:50%;background:var(--mc)}
-.prchip{font-family:var(--f-head);font-size:12px;letter-spacing:.06em;background:var(--pr-bg);color:var(--pr);border-radius:6px;padding:3px 8px;white-space:nowrap}
-.prev{font-size:12.5px;color:var(--mute);margin:8px 0 10px}
-.set,.sets-h{display:grid;grid-template-columns:22px 1fr 1fr 42px;gap:8px;align-items:center}
-.sets-h{margin-bottom:4px}
-.sets-h span{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);text-align:center}
-.set{margin-bottom:6px}
-.set .n{font-family:var(--f-head);color:var(--mute);text-align:center;font-size:15px}
-.step{display:grid;grid-template-columns:30px minmax(0,1fr) 30px;align-items:center;background:var(--surface2);border:1px solid var(--line);border-radius:8px;height:42px}
-.step button{height:40px;font-size:18px;color:var(--ink2);line-height:1}
-.step input{width:100%;min-width:0;border:0;background:transparent;text-align:center;font-family:var(--f-head);font-size:21px;padding:0;height:40px;font-variant-numeric:tabular-nums}
+.ex h3{font-size:23px;line-height:1.2}
+.tag{display:inline-flex;align-items:center;gap:7px;font-size:17px;color:var(--ink2);margin-top:4px}
+.tag i{width:9px;height:9px;background:var(--mc)}
+.prchip{font-family:var(--f-head);font-size:8px;line-height:1.5;background:var(--pr);color:#2a1f00;padding:5px 7px;white-space:nowrap;box-shadow:0 0 0 2px var(--o)}
+.prev{font-size:17px;color:var(--mute);margin:10px 0 12px}
+.set,.sets-h{display:grid;grid-template-columns:24px 1fr 1fr 46px;gap:8px;align-items:center}
+.sets-h{margin-bottom:6px}
+.sets-h span{font-family:var(--f-head);font-size:8px;text-transform:uppercase;color:var(--mute);text-align:center}
+.set{margin-bottom:8px}
+.set .n{font-family:var(--f-head);color:var(--mute);text-align:center;font-size:8px}
+.step{display:grid;grid-template-columns:30px minmax(0,1fr) 30px;align-items:center;background:var(--bg);box-shadow:0 0 0 3px var(--o);height:44px}
+.step button{height:44px;font-size:26px;font-weight:700;color:var(--ink2);line-height:1}
+.step button:active{background:var(--surface2)}
+.step input{width:100%;min-width:0;border:0;background:transparent;text-align:center;font-family:var(--f-head);font-size:16px;padding:0;height:44px;border-radius:0}
 .step input:focus-visible{outline:0}
-.step:focus-within{border-color:var(--ink)}
-.chk{height:42px;width:42px;border-radius:8px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center}
-.chk svg{width:20px;height:20px;fill:none;stroke:var(--on-accent);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;opacity:0}
-.set.done .chk{background:var(--accent);border-color:var(--accent)}
-.set.done .chk svg{opacity:1}
-.set.done .step{border-color:var(--ink2)}
-.ex-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.addex{width:100%;height:50px;border:1.5px dashed var(--mute);border-radius:12px;font-weight:600;color:var(--ink2);background:transparent}
+.step:focus-within{box-shadow:0 0 0 3px var(--accent)}
+.chk{height:44px;width:44px;background:var(--surface2);box-shadow:var(--ob),var(--bev);display:grid;place-items:center;color:var(--on-accent)}
+.chk .pxi{width:22px;opacity:0}
+.set.done .chk{background:var(--accent);box-shadow:var(--ob),inset 0 -4px 0 0 rgba(120,10,80,.45),inset 0 4px 0 0 rgba(255,255,255,.28)}
+.set.done .chk .pxi{opacity:1}
+.set.done .step{box-shadow:0 0 0 3px var(--ok)}
+.ex-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.addex{width:100%;min-height:52px;border:3px dashed var(--mute);font-weight:700;font-size:22px;color:var(--ink2);background:transparent}
+.addex:active{background:var(--surface)}
 
-/* rest timer */
-#rest{position:fixed;left:0;right:0;bottom:calc(var(--tabh) + env(safe-area-inset-bottom,0px) + 8px);z-index:30;padding-inline:16px;pointer-events:none}
-.restbar{max-width:640px;margin-inline:auto;background:var(--ink);color:var(--bg);border-radius:12px;padding:10px 12px 12px;pointer-events:auto;box-shadow:0 6px 24px rgba(0,0,0,.28)}
+/* таймер отдыха */
+#rest{position:fixed;left:0;right:0;bottom:calc(var(--tabh) + env(safe-area-inset-bottom,0px) + 14px);z-index:30;padding-inline:18px;pointer-events:none}
+.restbar{max-width:640px;margin-inline:auto;background:var(--ink);color:#14101c;padding:10px 12px 12px;pointer-events:auto;box-shadow:var(--ob),0 6px 0 0 var(--o)}
 .restbar .row{display:flex;align-items:center;gap:8px}
-.restbar .t{font-family:var(--f-head);font-size:30px;line-height:1;font-variant-numeric:tabular-nums;min-width:74px}
-.restbar .cap{font-size:12px;opacity:.75;flex:1}
-.restbar button{height:34px;padding-inline:11px;border-radius:7px;border:1px solid color-mix(in srgb,var(--bg) 35%,transparent);font-size:13px;font-weight:600}
-.restbar .bar{height:3px;background:color-mix(in srgb,var(--bg) 25%,transparent);border-radius:2px;margin-top:9px;overflow:hidden}
-.restbar .bar i{display:block;height:100%;background:var(--bg);width:100%}
-.restbar.over .t{animation:pulse .9s ease-in-out infinite}
-@keyframes pulse{50%{opacity:.45}}
+.restbar .t{font-family:var(--f-head);font-size:24px;line-height:1;min-width:92px}
+.restbar .cap{font-size:17px;flex:1;line-height:1.15}
+.restbar button{height:36px;padding-inline:10px;background:#14101c;color:var(--ink);font-weight:600;font-size:18px;box-shadow:0 0 0 2px var(--o)}
+.restbar .bar{height:10px;background:#cfc8e0;margin-top:10px;box-shadow:0 0 0 2px var(--o);overflow:hidden}
+.restbar .bar i{display:block;height:100%;background:var(--accent);width:100%}
+.restbar.over .t{animation:blink .8s steps(2,jump-none) infinite}
+@keyframes blink{50%{opacity:.25}}
 
-/* tabs */
-#tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+/* нижнее меню */
+#tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:4px solid var(--o);padding-bottom:env(safe-area-inset-bottom,0px)}
 #tabs div{max-width:640px;margin-inline:auto;display:grid;grid-template-columns:repeat(4,1fr);height:var(--tabh)}
-#tabs button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11.5px;font-weight:500;color:var(--mute)}
-#tabs button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-#tabs button[aria-current="page"]{color:var(--ink)}
-#tabs button[aria-current="page"] svg{stroke-width:2.4}
+#tabs button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-size:16px;font-weight:600;color:var(--mute)}
+#tabs button .pxi{width:24px}
+#tabs button[aria-current="page"]{color:var(--accent);background:var(--bg)}
+#tabs button[aria-current="page"]::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--accent)}
 
-/* progress */
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
-.seg button{height:34px;padding-inline:12px;font-size:13px;font-weight:500;color:var(--ink2)}
-.seg button+button{border-left:1px solid var(--line)}
+/* переключатели, карточки */
+.seg{display:inline-flex;box-shadow:var(--ob);background:var(--surface);flex:none}
+.seg button{height:36px;padding-inline:10px;white-space:nowrap;font-size:18px;font-weight:600;color:var(--ink2)}
+.seg button+button{border-left:3px solid var(--o)}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px}
-.card h2{font-family:var(--f-head);font-size:18px;text-transform:uppercase;letter-spacing:.03em;margin-bottom:10px}
-.dd{height:42px;width:100%;border:1px solid var(--line);border-radius:8px;background:var(--surface2);padding-inline:10px;font-weight:500;min-width:0}
-.ctl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
-.delta{font-size:14px;color:var(--ink2);margin:2px 0 8px}
-.delta b{font-family:var(--f-head);font-size:22px;color:var(--ink);font-weight:600;letter-spacing:.01em}
+.card{background:var(--surface);box-shadow:var(--ob),var(--bev);padding:14px;margin-bottom:20px}
+.card h2{font-family:var(--f-head);font-size:12px;line-height:1.5;text-transform:uppercase;margin-bottom:14px;color:var(--ink)}
+.dd{height:44px;width:100%;border:0;box-shadow:0 0 0 3px var(--o);background:var(--bg);padding-inline:10px;font-weight:600;min-width:0;border-radius:0;color-scheme:dark}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.delta{font-size:19px;color:var(--ink2);margin:2px 0 10px}
+.delta b{font-family:var(--f-head);font-size:16px;color:var(--ok);font-weight:400;line-height:1.6}
 .chart{position:relative;width:100%;min-height:60px}
-.chart svg{display:block;max-width:100%;touch-action:pan-y;overflow:visible}
-.chart text{font-family:var(--f-body);font-size:11px;fill:var(--mute)}
-.chart .grid{stroke:var(--line);stroke-width:1}
-.chart .axis{stroke:var(--mute);stroke-width:1}
-.chart .ln{fill:none;stroke:var(--sc);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
-.chart .ar{fill:var(--sc);fill-opacity:.12;stroke:none}
-.chart .pt{fill:var(--sc);stroke:var(--surface);stroke-width:2}
-.chart .cross{stroke:var(--mute);stroke-width:1;stroke-dasharray:3 3}
-.chart .vl{fill:var(--ink);font-family:var(--f-head);font-size:14px}
-.chart .seg-r{stroke:var(--surface);stroke-width:2}
-.chart .hl{fill:var(--ink);fill-opacity:.05}
-.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);padding:6px 9px;border-radius:6px;font-size:12px;line-height:1.35;white-space:nowrap;transform:translate(-50%,-100%);z-index:3}
-.tip b{font-family:var(--f-head);font-size:14px;font-weight:500}
-.tip i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:var(--mc)}
-.note{font-size:12.5px;color:var(--mute);margin-top:8px}
-.rec{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:9px 0;border-top:1px solid var(--line)}
+.chart svg{display:block;max-width:100%;touch-action:pan-y;overflow:visible;shape-rendering:crispEdges}
+.chart text{font-family:var(--f-body);font-size:14px;fill:var(--mute)}
+.chart .grid{stroke:#3a3652;stroke-width:2}
+.chart .axis{stroke:var(--mute);stroke-width:2}
+.chart .ln{fill:none;stroke:var(--sc);stroke-width:4;stroke-linejoin:miter;stroke-linecap:butt}
+.chart .ar{fill:var(--sc);fill-opacity:.16;stroke:none}
+.chart .pt{fill:var(--sc);stroke:var(--o);stroke-width:2}
+.chart .cross{stroke:var(--mute);stroke-width:2;stroke-dasharray:4 4}
+.chart .vl{fill:var(--ink);font-family:var(--f-head);font-size:8px}
+.chart .seg-r{stroke:var(--o);stroke-width:2}
+.chart .hl{fill:#fff;fill-opacity:.07}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:#14101c;padding:6px 9px;font-size:16px;line-height:1.35;white-space:nowrap;transform:translate(-50%,-100%);z-index:3;box-shadow:0 0 0 2px var(--o)}
+.tip b{font-family:var(--f-head);font-size:8px;font-weight:400}
+.tip i{display:inline-block;width:8px;height:8px;margin-right:6px;background:var(--mc)}
+.note{font-size:17px;color:var(--mute);margin-top:10px}
+.rec{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:10px 0;border-top:3px solid var(--o)}
 .rec:first-of-type{border-top:0}
-.rec .nm{font-weight:500;overflow-wrap:anywhere}
-.rec .v{font-family:var(--f-head);font-size:18px;text-align:right;font-variant-numeric:tabular-nums}
-.rec .s{font-size:12.5px;color:var(--mute)}
+.rec .nm{font-weight:600;overflow-wrap:anywhere}
+.rec .v{font-family:var(--f-head);font-size:12px;text-align:right;color:var(--pr);line-height:1.6}
+.rec .s{font-size:16px;color:var(--mute)}
 .rec .s:last-child{text-align:right}
 
-/* sheet */
+/* листы */
 #sheet{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center}
-#sheet .bd{position:absolute;inset:0;background:rgba(10,14,18,.55)}
-#sheet .pn{position:relative;width:100%;max-width:640px;max-height:86%;overflow:auto;background:var(--surface);border-radius:16px 16px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));animation:up .18s ease-out}
-@keyframes up{from{transform:translateY(24px);opacity:.4}}
-.pn .sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.pn h2{font-family:var(--f-head);font-size:22px;text-transform:uppercase;letter-spacing:.02em}
-.pn .sub{color:var(--mute);font-size:13px;margin:-8px 0 12px}
-.pn .q{width:100%;height:44px;border:1px solid var(--line);border-radius:8px;background:var(--surface2);padding-inline:12px;margin-bottom:10px}
-.opt{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:11px 4px;border-top:1px solid var(--line)}
-.opt i{width:9px;height:9px;border-radius:50%;background:var(--mc);flex:none}
+#sheet .bd{position:absolute;inset:0;background:rgba(5,4,10,.72)}
+#sheet .pn{position:relative;width:100%;max-width:640px;max-height:88%;overflow:auto;background:var(--surface);border-top:4px solid var(--o);padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));animation:up .16s steps(4) both}
+@keyframes up{from{transform:translateY(32px)}}
+.pn .sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.pn h2{font-family:var(--f-head);font-size:12px;line-height:1.5;text-transform:uppercase;color:var(--accent)}
+.pn .sub{color:var(--mute);font-size:17px;margin:-6px 0 14px}
+.pn .q{width:100%;height:46px;border:0;box-shadow:0 0 0 3px var(--o);background:var(--bg);padding-inline:12px;margin-bottom:12px;border-radius:0}
+.opt{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:12px 4px;border-top:3px solid var(--o)}
+.opt i{width:10px;height:10px;background:var(--mc);flex:none}
 .opt span{flex:1;min-width:0;overflow-wrap:anywhere}
-.opt small{color:var(--mute);font-size:12px}
-.mk{display:flex;gap:8px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
-.mk select{flex:1;min-width:0;height:40px;border:1px solid var(--line);border-radius:8px;background:var(--surface2);padding-inline:8px}
-.pn h3{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);margin:16px 0 4px}
-#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--tabh) + env(safe-area-inset-bottom,0px) + 16px);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:13px;z-index:60}
-/* challenge */
-.brand{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.brand img{width:46px;height:46px;border-radius:11px;flex:none}
-.brand h1{font-family:var(--f-head);font-size:28px;text-transform:uppercase;letter-spacing:.02em;line-height:1.05}
-.brand .mute{font-size:12.5px}
-.hero{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
-.hero .big{font-family:var(--f-head);font-size:52px;line-height:1.05;text-transform:uppercase;letter-spacing:.01em;margin:6px 0 12px}
-.hero .big small{font-size:22px;color:var(--mute)}
-.pbar{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;border:1px solid var(--line)}
-.pbar i{display:block;height:100%;background:var(--ink)}
-.hero .plan{margin-top:14px;font-size:15px}
-.hero .btn{margin-top:12px;width:100%}
-.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.cd{min-height:56px;border-radius:8px;border:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
-.cd.blank{border:0;background:none;pointer-events:none}
-.cd .cn{font-family:var(--f-head);font-size:17px;line-height:1;font-variant-numeric:tabular-nums}
-.cd .cs{font-size:10px;color:var(--mute);letter-spacing:.04em;text-transform:uppercase;line-height:1}
-.cd.rest{background:transparent;border-style:dashed}
-.cd.rest .cn{color:var(--mute)}
-.cd.pl{border-color:var(--mc);border-width:1.5px}
-.cd.pl .cs{color:var(--ink2);font-weight:600}
-.cd.ok{background:color-mix(in srgb,var(--mc) 22%,var(--surface))}
-.cd.ok .cs{color:var(--ink)}
-.cd.miss{border-style:dashed}
-.cd.today{box-shadow:0 0 0 2px var(--ink)}
-.cd.sel{outline:2px solid var(--ink);outline-offset:2px}
-.exl{margin:10px 0 0;padding:0;list-style:none;font-size:14px}
-.exl li{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-top:1px solid var(--line)}
-.exl li:first-child{border-top:0}
-.exl span:last-child{color:var(--mute);font-family:var(--f-head);white-space:nowrap}
-.help h3{margin:18px 0 6px}
-.help p{margin:0 0 8px;color:var(--ink2);font-size:14.5px}
-.help ol,.help ul{margin:0 0 8px;padding-left:20px;color:var(--ink2);font-size:14.5px}
-.help li{margin:3px 0}
-.help b{color:var(--ink)}
-.recap img{display:block;width:auto;max-width:100%;max-height:54vh;margin:0 auto 12px;border-radius:10px;border:1px solid var(--line)}
-.recap .ex-actions{justify-content:center}
+.opt small{color:var(--mute);font-size:16px}
+.mk{display:flex;gap:8px;align-items:center;padding:12px 0;border-top:3px solid var(--o)}
+.mk select{flex:1;min-width:0;height:42px;border:0;box-shadow:0 0 0 3px var(--o);background:var(--bg);padding-inline:8px;border-radius:0}
+.pn h3{font-family:var(--f-head);font-size:8px;line-height:1.5;text-transform:uppercase;color:var(--mute);margin:20px 0 6px}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--tabh) + env(safe-area-inset-bottom,0px) + 18px);background:var(--ink);color:#14101c;padding:10px 16px;font-size:18px;font-weight:600;z-index:60;box-shadow:var(--ob),0 6px 0 0 var(--o);max-width:calc(100% - 40px);text-align:center}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+
+/* челлендж */
+.brand{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.brand img{width:52px;height:52px;flex:none;box-shadow:var(--ob)}
+.brand h1{font-family:var(--f-head);font-size:16px;line-height:1.5;text-transform:uppercase;color:var(--accent);text-shadow:3px 3px 0 var(--o)}
+.brand .mute{font-size:17px;margin-top:4px}
+.hero{background:var(--surface);box-shadow:var(--ob),var(--bev);padding:16px;margin-bottom:22px}
+.hero .big{font-family:var(--f-head);font-size:24px;line-height:1.3;text-transform:uppercase;margin:8px 0 14px;color:var(--ink);text-shadow:3px 3px 0 var(--o)}
+.hero .big small{font-size:19px;color:var(--mute);text-shadow:none}
+.pbar{display:flex;gap:2px;height:16px;padding:3px;background:var(--bg);box-shadow:0 0 0 3px var(--o)}
+.pbar i{flex:1;background:#3a3652}
+.pbar i.on{background:var(--accent)}
+.pbar i.now{background:var(--pr)}
+.hero .btn{width:100%}
+.talk{display:flex;gap:16px;align-items:flex-end;margin-top:18px}
+.talk img{flex:none;display:block}
+.talk .bw{flex:1;min-width:0;padding-bottom:6px}
+.bubble{position:relative;background:var(--bub);color:#14101c;padding:12px 14px;font-size:20px;font-weight:600;line-height:1.25;box-shadow:var(--ob);margin-left:6px}
+.bubble::before{content:"";position:absolute;left:-9px;top:21px;width:3px;height:3px;background:var(--bub);box-shadow:0 3px 0 var(--bub),-3px 3px 0 var(--bub),0 6px 0 var(--bub),3px 3px 0 var(--bub),3px 0 0 var(--bub),3px 6px 0 var(--bub)}
+.bubble b{font-weight:700;color:#a1126f}
+.talk .btn{margin-top:14px}
+.plan{margin-top:12px;font-size:20px;line-height:1.3}
+.plan b{font-weight:700;color:var(--pr)}
+.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cd{min-height:58px;background:var(--surface2);border:2px solid var(--o);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;position:relative}
+.cd.blank{border-color:transparent;background:none;pointer-events:none}
+.cd .cn{font-family:var(--f-head);font-size:8px;line-height:1;color:var(--ink)}
+.cd .cs{font-size:14px;color:var(--mute);line-height:1;display:flex;align-items:center;gap:3px}
+.cd .cs .pxi{width:9px}
+.cd.rest{background:transparent;border-style:dashed;border-color:#4a4566}
+.cd.rest .cn{color:var(--mute)}
+.cd.pl{border-color:var(--mc);background:color-mix(in srgb,var(--mc) 16%,var(--surface2))}
+.cd.pl .cs{color:var(--ink2);font-weight:600}
+.cd.ok{background:var(--mc);border-color:var(--o)}
+.cd.ok .cn,.cd.ok .cs{color:#14101c}
+.cd.miss{border-style:dashed}
+.cd.today{box-shadow:0 0 0 3px var(--ink)}
+.cd.sel{outline:3px solid var(--accent);outline-offset:2px}
+.dayhead{display:flex;gap:14px;justify-content:space-between;align-items:flex-start}
+.dayhead .t{font-weight:700;font-size:24px;line-height:1.15}
+.dayhead img{flex:none;box-shadow:0 0 0 3px var(--o)}
+.exl{margin:12px 0 0;padding:0;list-style:none;font-size:19px}
+.exl li{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:3px solid var(--o)}
+.exl li:first-child{border-top:0}
+.exl span:last-child{color:var(--pr);font-family:var(--f-head);font-size:8px;line-height:2;white-space:nowrap}
+.help h3{margin:22px 0 8px}
+.help p{margin:0 0 10px;color:var(--ink2);font-size:19px}
+.help ol,.help ul{margin:0 0 10px;padding-left:22px;color:var(--ink2);font-size:19px}
+.help li{margin:5px 0}
+.help b{color:var(--ink)}
+.help .bubble{color:#14101c}
+.help .bubble b{color:#a1126f}
+.help .hh{display:flex;gap:14px;align-items:flex-end;margin-bottom:6px}
+.recap img.pic{display:block;width:auto;max-width:100%;max-height:54vh;margin:0 auto 14px;box-shadow:0 0 0 3px var(--o)}
+.recap .ex-actions{justify-content:center}
 </style>
 
 <div id="app">
@@ -256,10 +280,10 @@ button.chip[aria-pressed="true"] i{box-shadow:0 0 0 1.5px var(--on-accent)}
 </div>
 <div id="rest"></div>
 <nav id="tabs" aria-label="Разделы"><div>
-  <button data-act="tab" data-tab="ch"><svg viewBox="0 0 24 24"><path d="M5 21V4M5 4h12l-2.5 4L17 12H5"/></svg>Челлендж</button>
-  <button data-act="tab" data-tab="cal"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Календарь</button>
-  <button data-act="tab" data-tab="log"><svg viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg>Тренировка</button>
-  <button data-act="tab" data-tab="prog"><svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M8 16l3-4 3 2 5-7"/></svg>Прогресс</button>
+  <button data-act="tab" data-tab="ch"><svg class="pxi" viewBox="0 0 12 12" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true"><rect x="1" y="0" width="1" height="1"/><rect x="1" y="1" width="7" height="1"/><rect x="1" y="2" width="8" height="1"/><rect x="1" y="3" width="9" height="1"/><rect x="1" y="4" width="8" height="1"/><rect x="1" y="5" width="7" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="1" y="9" width="1" height="1"/><rect x="1" y="10" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/></svg>Челлендж</button>
+  <button data-act="tab" data-tab="cal"><svg class="pxi" viewBox="0 0 12 12" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true"><rect x="1" y="0" width="2" height="1"/><rect x="9" y="0" width="2" height="1"/><rect x="1" y="1" width="2" height="1"/><rect x="9" y="1" width="2" height="1"/><rect x="0" y="2" width="12" height="1"/><rect x="0" y="3" width="12" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="11" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="2" y="5" width="2" height="1"/><rect x="5" y="5" width="2" height="1"/><rect x="8" y="5" width="2" height="1"/><rect x="11" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="11" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="2" y="7" width="2" height="1"/><rect x="5" y="7" width="2" height="1"/><rect x="8" y="7" width="2" height="1"/><rect x="11" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="11" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="2" y="9" width="2" height="1"/><rect x="5" y="9" width="2" height="1"/><rect x="8" y="9" width="2" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="0" y="10" width="1" height="1"/><rect x="11" y="10" width="1" height="1"/><rect x="0" y="11" width="12" height="1"/></svg>Календарь</button>
+  <button data-act="tab" data-tab="log"><svg class="pxi" viewBox="0 0 12 12" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true"><rect x="2" y="1" width="1" height="1"/><rect x="9" y="1" width="1" height="1"/><rect x="1" y="2" width="2" height="1"/><rect x="9" y="2" width="2" height="1"/><rect x="0" y="3" width="4" height="1"/><rect x="8" y="3" width="4" height="1"/><rect x="0" y="4" width="12" height="1"/><rect x="0" y="5" width="12" height="1"/><rect x="0" y="6" width="4" height="1"/><rect x="8" y="6" width="4" height="1"/><rect x="1" y="7" width="2" height="1"/><rect x="9" y="7" width="2" height="1"/><rect x="2" y="8" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/></svg>Тренировка</button>
+  <button data-act="tab" data-tab="prog"><svg class="pxi" viewBox="0 0 12 12" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true"><rect x="0" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="10" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="9" y="4" width="2" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="8" y="5" width="3" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="2" height="1"/><rect x="7" y="6" width="4" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="2" y="7" width="4" height="1"/><rect x="7" y="7" width="4" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="2" y="8" width="4" height="1"/><rect x="7" y="8" width="4" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="2" y="9" width="4" height="1"/><rect x="7" y="9" width="4" height="1"/><rect x="0" y="10" width="12" height="1"/></svg>Прогресс</button>
 </div></nav>
 <div id="sheet" hidden></div>
 <div id="toast" hidden></div>
@@ -289,9 +313,9 @@ const MONTHS_G=['января','февраля','марта','апреля','м�
 const WD=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
 const DOW=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
 const IC={
- back:'<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>',
- next:'<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>',
- chk:'<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+ back:"<svg class=\"pxi\" viewBox=\"0 0 5 7\" shape-rendering=\"crispEdges\" fill=\"currentColor\" aria-hidden=\"true\"><rect x=\"3\" y=\"0\" width=\"2\" height=\"1\"/><rect x=\"2\" y=\"1\" width=\"2\" height=\"1\"/><rect x=\"1\" y=\"2\" width=\"2\" height=\"1\"/><rect x=\"0\" y=\"3\" width=\"2\" height=\"1\"/><rect x=\"1\" y=\"4\" width=\"2\" height=\"1\"/><rect x=\"2\" y=\"5\" width=\"2\" height=\"1\"/><rect x=\"3\" y=\"6\" width=\"2\" height=\"1\"/></svg>",
+ next:"<svg class=\"pxi\" viewBox=\"0 0 5 7\" shape-rendering=\"crispEdges\" fill=\"currentColor\" aria-hidden=\"true\"><rect x=\"0\" y=\"0\" width=\"2\" height=\"1\"/><rect x=\"1\" y=\"1\" width=\"2\" height=\"1\"/><rect x=\"2\" y=\"2\" width=\"2\" height=\"1\"/><rect x=\"3\" y=\"3\" width=\"2\" height=\"1\"/><rect x=\"2\" y=\"4\" width=\"2\" height=\"1\"/><rect x=\"1\" y=\"5\" width=\"2\" height=\"1\"/><rect x=\"0\" y=\"6\" width=\"2\" height=\"1\"/></svg>",
+ chk:"<svg class=\"pxi\" viewBox=\"0 0 8 5\" shape-rendering=\"crispEdges\" fill=\"currentColor\" aria-hidden=\"true\"><rect x=\"6\" y=\"0\" width=\"2\" height=\"1\"/><rect x=\"5\" y=\"1\" width=\"2\" height=\"1\"/><rect x=\"0\" y=\"2\" width=\"2\" height=\"1\"/><rect x=\"4\" y=\"2\" width=\"2\" height=\"1\"/><rect x=\"1\" y=\"3\" width=\"4\" height=\"1\"/><rect x=\"2\" y=\"4\" width=\"2\" height=\"1\"/></svg>"
 };
 
 /* ---------- даты и числа ---------- */
@@ -537,17 +561,34 @@ function backupSection(){
 function chFooter(){
   return `<section class="daypanel"><div class="head"><h2>Ещё</h2></div><div class="ex-actions"><button class="btn sm" data-act="help">Как пользоваться</button>${deferredInstall&&!isStandalone()?'<button class="btn sm" data-act="install">Установить приложение</button>':''}${S.start&&!S.editStart?'<button class="btn sm" data-act="edit-start">Изменить дату старта</button>':''}</div></section>${backupSection()}`;
 }
+const SPS={"idle": [61, 190], "flex": [112, 190], "walk": [67, 200], "point": [117, 200], "phone": [122, 200]},SCS={"squat": [88, 143], "bench": [88, 126], "pull": [88, 158], "tired": [88, 158], "curl": [88, 156]};
+const SAY={
+ setup:['Привет! Я <b>Борис</b>. Выбери дату старта, и качаем 30 дней.'],
+ before:['Разминайся. Скоро начинаем!','Железо уже скучает по тебе.'],
+ todo:['Ну что, качаем? Железо ждёт!','Не стой столбом. Жми «Начать тренировку».','Блины сами себя не поднимут.','Один подход, и ты уже в деле.'],
+ doing:['Ты начал, так дотяни до конца!'],
+ done:['Вот это сила! Тренировка в кармане.','Красавчик. Теперь еда и сон.','Тоннаж растёт, усы тоже.'],
+ rest:['Сегодня отдых. Мышцы растут, пока ты спишь.','Отдых тоже часть программы.','Выпей воды и не забудь поесть.'],
+ after:['30 дней позади! Ты машина. Жми «Мои итоги».']
+};
+const say=(k,n=0)=>SAY[k][Math.abs(n)%SAY[k].length];
+const spr=(n,cls='')=>`<img${cls?` class="${cls}"`:''} src="img/boris_${n}_s.png" width="${SPS[n][0]}" height="${SPS[n][1]}" alt="Бро Борис">`;
+const scene=(n,cls='')=>`<img${cls?` class="${cls}"`:''} src="img/scene_${n}_m.png" width="${SCS[n][0]}" height="${SCS[n][1]}" alt="">`;
+const talk=(img,text,extra='')=>`<div class="talk">${spr(img)}<div class="bw"><div class="bubble">${text}</div>${extra}</div></div>`;
+const pbar=n=>`<div class="pbar" role="img" aria-label="Пройдено ${Math.min(30,Math.max(0,n-1))} из 30 дней">${Array.from({length:30},(_,i)=>`<i class="${n>30||i<n-1?'on':i===n-1?'now':''}"></i>`).join('')}</div>`;
+const SCENE_BY={1:'squat',3:'bench',5:'pull'};
 function setupCard(){
   const nm=nextMonday(),isMon=nm===todayISO();
   return `<section class="card"><h2>${S.start?'Дата старта':'Когда стартуем?'}</h2>
-  <p class="note" style="margin-top:0">30 дней, тренировки в понедельник, среду и пятницу. Лучше начинать в понедельник: так недели совпадают с программой в клубе.${S.start?' Записанные тренировки не удалятся.':''}</p>
-  <ul class="exl" style="margin-bottom:14px">${[1,3,5].map(k=>`<li><span>${SHORT[k]} · ${PROGRAM[k].title}</span><span>${PROGRAM[k].ex.length} упр.</span></li>`).join('')}</ul>
+  ${talk('walk',say('setup'))}
+  <p class="note">30 дней, тренировки в понедельник, среду и пятницу. Лучше начинать в понедельник: так недели совпадают с программой в клубе.${S.start?' Записанные тренировки не удалятся.':''}</p>
+  <ul class="exl" style="margin-bottom:16px">${[1,3,5].map(k=>`<li><span>${SHORT[k]} · ${PROGRAM[k].title}</span><span>${PROGRAM[k].ex.length} упр.</span></li>`).join('')}</ul>
   <div class="ex-actions"><button class="btn pri" data-act="start-set" data-date="${nm}">${isMon?'Стартую сегодня, ':'С понедельника, '}${fmtDay(nm)}</button>${isMon?'':'<button class="btn" data-act="start-set" data-date="'+todayISO()+'">Сегодня</button>'}</div>
-  <div class="ctl" style="margin:12px 0 0"><input class="wdate" id="sdate" type="date" value="${S.start||nm}" aria-label="Своя дата старта"><button class="btn sm" data-act="start-pick">Выбрать эту дату</button>${S.start?'<button class="btn sm" data-act="start-cancel">Отмена</button>':''}</div></section>`;
+  <div class="ctl" style="margin:14px 0 0"><input class="wdate" id="sdate" type="date" value="${S.start||nm}" aria-label="Своя дата старта"><button class="btn sm" data-act="start-pick">Выбрать эту дату</button>${S.start?'<button class="btn sm" data-act="start-cancel">Отмена</button>':''}</div></section>`;
 }
 function viewCh(){
   const td=todayISO();
-  let h=`<div class="brand"><img src="icons/icon-192.png" alt=""><div><h1>Тоннаж</h1><div class="mute">Пн · Ср · Пт · 30 дней вместе</div></div></div><div class="sync" id="sync"></div>${nudges()}`;
+  let h=`<div class="brand"><img src="icons/icon-192.png" width="52" height="52" alt=""><div><h1>Тоннаж</h1><div class="mute">Пн · Ср · Пт · 30 дней вместе</div></div></div><div class="sync" id="sync"></div>${nudges()}`;
   if(!S.start||S.editStart)return h+setupCard()+chFooter();
   const days=chDays(),end=days[29].date,n=dayDiff(td,S.start)+1,state=n<1?'before':n>30?'after':'on';
   if(!S.cdSel||S.cdSel<S.start||S.cdSel>end)S.cdSel=state==='on'?td:days[0].date;
@@ -557,35 +598,36 @@ function viewCh(){
   let hero='';
   if(state==='before'){
     const k=dayDiff(S.start,td),f=days.find(d=>d.p);
-    hero=`<div class="label">Челлендж</div><div class="big">Старт через ${k} ${plural(k,'день','дня','дней')}</div><div class="plan">${WD[parse(S.start).getDay()]}, ${fmtDay(S.start)}. Первая тренировка: <b>${f.p.title}</b>, ${fmtDay(f.date)}.</div>`;
+    hero=`<div class="label">Челлендж</div><div class="big">Старт через ${k} ${plural(k,'день','дня','дней')}</div>${pbar(0)}<div class="plan">${WD[parse(S.start).getDay()]}, ${fmtDay(S.start)}. Первая тренировка: <b>${f.p.title}</b>, ${fmtDay(f.date)}.</div>${talk('idle',say('before',k))}`;
   }else if(state==='on'){
     const dd=days[n-1],wk=dayWorkout(td),done=wk&&wStats(wk).sets>0;
-    hero=`<div class="label">Челлендж</div><div class="big">День ${n}<small> / 30</small></div><div class="pbar" role="img" aria-label="Пройдено ${n} из 30 дней"><i style="width:${n/30*100}%"></i></div>`;
+    hero=`<div class="label">Челлендж</div><div class="big">День ${n}<small> / 30</small></div>${pbar(n)}`;
     if(dd.p){
-      if(done){const s=wStats(wk);hero+=`<div class="plan">Сегодня выполнено: <b>${dd.p.title}</b>. ${s.sets} подх., ${fmtVol(s.vol)}. Отличная работа.</div><button class="btn" data-act="ch-open" data-date="${td}">Открыть тренировку</button>`}
-      else hero+=`<div class="plan">Сегодня: <b>${dd.p.title}</b></div><button class="btn pri" data-act="ch-start" data-date="${td}">${wk?'Продолжить тренировку':'Начать тренировку'}</button>`;
+      if(done){const s=wStats(wk);hero+=`<div class="plan">Сегодня выполнено: <b>${dd.p.title}</b>. ${s.sets} подх., ${fmtVol(s.vol)}.</div>${talk('flex',say('done',n),`<button class="btn" data-act="ch-open" data-date="${td}">Открыть тренировку</button>`)}`}
+      else hero+=`<div class="plan">Сегодня: <b>${dd.p.title}</b></div>${talk('point',say(wk?'doing':'todo',n),`<button class="btn pri" data-act="ch-start" data-date="${td}">${wk?'Продолжить тренировку':'Начать тренировку'}</button>`)}`;
     }else{
       const nx=days.find(d=>d.n>n&&d.p);
-      hero+=nx?`<div class="plan">Сегодня отдых. Следующая тренировка: <b>${DOW[(nx.dow+6)%7]}, ${fmtDay(nx.date)}</b>, ${nx.p.title}.</div>`:`<div class="plan">Это последний день челленджа. Подведи итоги ниже.</div>`;
+      hero+=(nx?`<div class="plan">Сегодня отдых. Следующая тренировка: <b>${DOW[(nx.dow+6)%7]}, ${fmtDay(nx.date)}</b>, ${nx.p.title}.</div>`:`<div class="plan">Это последний день челленджа. Подведи итоги ниже.</div>`)+talk('idle',say(nx?'rest':'after',n));
     }
   }else{
-    hero=`<div class="label">Челлендж</div><div class="big">30 дней<small> позади</small></div><div class="plan">Выполнено тренировок по программе: <b>${okc} из ${planned}</b>. Посмотри, как вырос вес по упражнениям.</div>`;
+    hero=`<div class="label">Челлендж</div><div class="big">30 дней<small> позади</small></div>${pbar(31)}<div class="plan">Выполнено тренировок по программе: <b>${okc} из ${planned}</b>.</div>${talk('flex',say('after'))}`;
   }
   const off=(parse(S.start).getDay()+6)%7;
   let cells='';for(let i=0;i<off;i++)cells+='<span class="cd blank"></span>';
   for(const d of days){
     const ok=hasDone(d.date),past=d.date<td;
-    cells+=`<button class="${['cd',d.p?'pl':'rest',ok?'ok':'',d.p&&!ok&&past?'miss':'',d.date===td?'today':'',d.date===S.cdSel?'sel':''].join(' ')}"${d.p?` style="--mc:var(--m${d.p.color})"`:''} data-act="ch-day" data-date="${d.date}" aria-label="День ${d.n}, ${fmtDay(d.date)}, ${d.p?d.p.title:'отдых'}${ok?', выполнено':''}"><span class="cn">${d.n}</span><span class="cs">${d.p?(ok?'✓ ':'')+SHORT[d.dow]:'·'}</span></button>`;
+    cells+=`<button class="${['cd',d.p?'pl':'rest',ok?'ok':'',d.p&&!ok&&past?'miss':'',d.date===td?'today':'',d.date===S.cdSel?'sel':''].join(' ')}"${d.p?` style="--mc:var(--m${d.p.color})"`:''} data-act="ch-day" data-date="${d.date}" aria-label="День ${d.n}, ${fmtDay(d.date)}, ${d.p?d.p.title:'отдых'}${ok?', выполнено':''}"><span class="cn">${d.n}</span><span class="cs">${d.p?(ok?IC.chk:'')+SHORT[d.dow]:'·'}</span></button>`;
   }
   const sd=days.find(d=>d.date===S.cdSel),swk=dayWorkout(sd.date);
   let det;
   if(sd.p){
-    det=`<div class="head"><h2>День ${sd.n} · ${DOW[(sd.dow+6)%7]}, ${fmtDay(sd.date)}</h2></div><div class="wcard" style="cursor:default"><div class="t">${sd.p.title}</div><ul class="exl">${sd.p.ex.map(([nm,g,r])=>`<li><span>${esc(nm)}</span><span>${repTxt(r)}</span></li>`).join('')}</ul></div>`;
+    const gs=[...new Set(sd.p.ex.map(e=>e[1]))];
+    det=`<div class="head"><h2>День ${sd.n} · ${DOW[(sd.dow+6)%7]}, ${fmtDay(sd.date)}</h2></div><div class="wcard" style="cursor:default"><div class="dayhead"><div><div class="t">${sd.p.title}</div><div class="chips">${gs.map(g=>`<span class="chip"><i style="--mc:${gc(g)}"></i>${g}</span>`).join('')}</div></div>${scene(SCENE_BY[sd.dow])}</div><ul class="exl">${sd.p.ex.map(([nm,g,r])=>`<li><span>${esc(nm)}</span><span>${repTxt(r)}</span></li>`).join('')}</ul></div>`;
     if(swk)det+=`<button class="btn" style="width:100%" data-act="ch-open" data-date="${sd.date}">Открыть тренировку</button>`;
     else if(sd.date<=td)det+=`<button class="btn pri" style="width:100%" data-act="ch-start" data-date="${sd.date}">${sd.date<td?'Записать пропущенную':'Начать тренировку'}</button>`;
     else det+=`<p class="note">Этот день ещё впереди.</p>`;
   }else{
-    det=`<div class="head"><h2>День ${sd.n} · ${DOW[(sd.dow+6)%7]}, ${fmtDay(sd.date)}</h2></div><div class="empty">День отдыха. Восстановление тоже часть программы.</div>${swk?`<button class="btn" style="width:100%;margin-top:10px" data-act="ch-open" data-date="${sd.date}">Открыть тренировку</button>`:sd.date<=td?`<button class="btn" style="width:100%;margin-top:10px" data-act="ch-free" data-date="${sd.date}">Записать свою тренировку</button>`:''}`;
+    det=`<div class="head"><h2>День ${sd.n} · ${DOW[(sd.dow+6)%7]}, ${fmtDay(sd.date)}</h2></div><div class="empty">${scene('tired','sc')}День отдыха. Восстановление тоже часть программы.</div>${swk?`<button class="btn" style="width:100%;margin-top:12px" data-act="ch-open" data-date="${sd.date}">Открыть тренировку</button>`:sd.date<=td?`<button class="btn" style="width:100%;margin-top:12px" data-act="ch-free" data-date="${sd.date}">Записать свою тренировку</button>`:''}`;
   }
   h+=`<section class="hero">${hero}</section>
   <div class="strip"><div><div class="label">По плану</div><div class="v">${okc}<small> / ${planned}</small></div></div><div><div class="label">Подходов</div><div class="v">${sets}</div></div><div><div class="label">Тоннаж</div><div class="v">${vol>=1000?fmt(vol/1000)+' <small>т</small>':fmt(vol)+' <small>кг</small>'}</div></div></div>
@@ -596,7 +638,7 @@ function viewCh(){
   return h+chFooter();
 }
 function helpHTML(){
-  return `<h3 id="h-start">С чего начать</h3>
+  return `<div class="hh">${spr('phone')}<div class="bubble">Я <b>Борис</b>. Сейчас покажу, как тут всё устроено.</div></div><h3 id="h-start">С чего начать</h3>
   <ol><li>На вкладке «Челлендж» выбери дату старта (лучше понедельник).</li><li>В день тренировки открой «Челлендж» и нажми «Начать тренировку»: программа дня подставится сама.</li><li>После каждого подхода впиши вес и повторы и нажми галочку. Включится таймер отдыха.</li></ol>
   <h3 id="h-log">Как записывать тренировку</h3>
   <ul><li>Строка «В прошлый раз» показывает, что было на прошлой тренировке. Твоя цель: чуть лучше.</li><li>Кнопки «+ Подход» и «− Подход» меняют число подходов, «Убрать» удаляет упражнение, «+ Добавить упражнение» добавляет своё.</li><li>Упражнение без веса (подтягивания, отжимания): оставь вес пустым и пиши только повторы.</li><li>Таймер отдыха переключается кнопками 60, 90, 120 и 180 секунд.</li><li>Пропустил день? Нажми на него в календаре челленджа и «Записать пропущенную».</li></ul>
@@ -630,46 +672,52 @@ function recapData(){
 }
 async function buildRecap(){
   const R=recapData(),W=1080,H=1920,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
-  try{await Promise.race([Promise.all([document.fonts.load('600 80px Oswald'),document.fonts.load('500 40px "IBM Plex Sans"')]),new Promise(r=>setTimeout(r,1500))])}catch(e){}
-  const HF='Oswald,"Arial Narrow",Impact,sans-serif',BF='"IBM Plex Sans",system-ui,-apple-system,sans-serif';
-  const rr=(px,py,w,h,r)=>{x.beginPath();x.moveTo(px+r,py);x.arcTo(px+w,py,px+w,py+h,r);x.arcTo(px+w,py+h,px,py+h,r);x.arcTo(px,py+h,px,py,r);x.arcTo(px,py,px+w,py,r);x.closePath()};
-  const fit=(txt,font,maxW,size)=>{let s=size;do{x.font=font.replace('#',s);s-=2}while(x.measureText(txt).width>maxW&&s>22);return txt};
-  x.fillStyle='#12171c';x.fillRect(0,0,W,H);
-  x.fillStyle='#eb6834';x.fillRect(0,0,W,14);
+  x.imageSmoothingEnabled=false;
+  try{await Promise.race([Promise.all([document.fonts.load('16px "Press Start 2P"'),document.fonts.load('40px "Tiny5"'),document.fonts.load('40px "Tiny5"')]),new Promise(r=>setTimeout(r,1500))])}catch(e){}
+  const HF='"Press Start 2P","Courier New",monospace',BF='"Tiny5",system-ui,sans-serif';
+  const PINK='#ff3db8',DARK='#0b0a10',CREAM='#f6f1e7',MUTE='#948eae',SURF='#272535';
+  const img=await new Promise(res=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>res(null);i.src='img/boris_flex.png'});
+  const fit=(txt,font,maxW,size)=>{let s=size;do{x.font=font.replace('#',s);s-=2}while(x.measureText(txt).width>maxW&&s>14)};
+  const panel=(px,py,w,h,fill)=>{x.fillStyle=DARK;x.fillRect(px-6,py,w+12,h);x.fillRect(px,py-6,w,h+12);x.fillStyle=fill;x.fillRect(px,py,w,h);x.fillStyle='rgba(255,255,255,.07)';x.fillRect(px,py,w,8);x.fillStyle='rgba(0,0,0,.30)';x.fillRect(px,py+h-8,w,8)};
+  x.fillStyle='#1b1a24';x.fillRect(0,0,W,H);
+  x.fillStyle='#201f2b';for(let yy=0;yy<H;yy+=16)for(let xx=((yy/16)%2)*16;xx<W;xx+=32)x.fillRect(xx,yy,16,16);
+  x.fillStyle=PINK;x.fillRect(0,0,W,24);x.fillStyle=DARK;x.fillRect(0,24,W,6);
   x.textBaseline='alphabetic';x.textAlign='left';
-  x.fillStyle='#edf1f4';x.font=`600 84px ${HF}`;x.fillText('ТОННАЖ',72,176);
-  x.fillStyle='#a9b3bd';x.font=`500 38px ${BF}`;x.fillText(R.sub,72,236);
-  const tiles=[[R.tr,'тренировок'],[R.sets,'подходов'],[R.vol>=1000?fmt(R.vol/1000):fmt(R.vol),R.vol>=1000?'тонн поднято':'кг поднято']];
-  const tw=(W-144-48)/3;
+  x.fillStyle=DARK;x.font=`64px ${HF}`;x.fillText('ТОННАЖ',78,166);x.fillStyle=PINK;x.fillText('ТОННАЖ',72,160);
+  x.fillStyle=CREAM;x.font=`40px ${BF}`;x.fillText(R.sub,72,232);
+  const tiles=[[String(R.tr),'тренировок'],[String(R.sets),'подходов'],[R.vol>=1000?fmt(R.vol/1000):fmt(R.vol),R.vol>=1000?'тонн поднято':'кг поднято']];
   tiles.forEach(([v,l],i)=>{
-    const px=72+i*(tw+24),py=300;
-    x.fillStyle='#171d22';rr(px,py,tw,220,18);x.fill();x.strokeStyle='#2a343c';x.lineWidth=2;x.stroke();
-    x.fillStyle='#edf1f4';x.textAlign='center';x.font=`600 112px ${HF}`;x.fillText(String(v),px+tw/2,py+130);
-    x.fillStyle='#a9b3bd';x.font=`500 30px ${BF}`;x.fillText(l,px+tw/2,py+184);
+    const py=300+i*176;panel(72,py,560,152,SURF);
+    x.fillStyle=CREAM;x.textAlign='left';fit(v,'#px "Press Start 2P"',480,56);x.fillText(v,100,py+86);
+    x.fillStyle=MUTE;x.font=`34px ${BF}`;x.fillText(l,100,py+132);
   });
+  if(img){const sc=2,bw=img.width*sc,bh=img.height*sc,bx=W-72-bw+10,by=240;x.drawImage(img,bx,by,bw,bh)}
+  const say=R.tr>=12||R.sub.indexOf('ПРОЙДЕНО')>0?'ВОТ ЭТО СИЛА!':'ТАК ДЕРЖАТЬ!';
+  panel(684,96,324,104,CREAM);x.fillStyle='#14101c';x.textAlign='center';x.font=`38px ${BF}`;x.fillText(say,846,160);
+  x.fillStyle=CREAM;x.fillRect(838,206,12,6);x.fillRect(844,212,12,6);x.fillRect(850,218,12,6);
   x.textAlign='left';
-  x.fillStyle='#eb6834';x.font=`600 44px ${HF}`;x.fillText('БЫЛО → СТАЛО',72,640);
-  let y=680;
-  if(!R.rows.length){x.fillStyle='#a9b3bd';x.font=`500 40px ${BF}`;x.fillText('Здесь появятся цифры после первых тренировок.',72,y+80)}
-  for(const r of R.rows){
+  x.fillStyle=PINK;x.font=`32px ${HF}`;x.fillText('БЫЛО » СТАЛО',72,980);
+  let y=1012;
+  if(!R.rows.length){x.fillStyle=MUTE;x.font=`40px ${BF}`;x.fillText('Цифры появятся после тренировок.',72,y+80)}
+  for(const r of R.rows.slice(0,5)){
     const unit=r.bw?'повт.':'кг';
-    x.fillStyle='#edf1f4';fit(r.name,`500 #px ${BF}`,520,44);x.fillText(r.name,72,y+62);
-    x.fillStyle='#a9b3bd';x.font=`500 30px ${BF}`;x.fillText(`${r.n} ${plural(r.n,'тренировка','тренировки','тренировок')}`,72,y+112);
+    x.fillStyle=CREAM;x.textAlign='left';fit(r.name,'#px "Tiny5"',470,44);x.fillText(r.name,72,y+58);
+    x.fillStyle=MUTE;x.font=`30px ${BF}`;x.fillText(`${r.n} ${plural(r.n,'тренировка','тренировки','тренировок')}`,72,y+104);
     x.textAlign='right';
     if(r.n>1){
-      x.fillStyle='#edf1f4';x.font=`600 64px ${HF}`;x.fillText(`${fmt(r.a)} → ${fmt(r.b)} ${unit}`,W-72,y+70);
-      x.fillStyle=r.d>0?'#3ccf91':'#a9b3bd';x.font=`600 40px ${HF}`;x.fillText(r.d>0?`+${fmt(r.d)} ${unit}`:r.d<0?`−${fmt(-r.d)} ${unit}`:'без изменений',W-72,y+120);
+      x.fillStyle=CREAM;fit(`${fmt(r.a)} » ${fmt(r.b)} ${unit}`,'#px "Press Start 2P"',470,36);x.fillText(`${fmt(r.a)} » ${fmt(r.b)} ${unit}`,W-72,y+58);
+      x.fillStyle=r.d>0?'#45e09b':MUTE;x.font=`24px ${HF}`;x.fillText(r.d>0?`+${fmt(r.d)} ${unit}`:r.d<0?`−${fmt(-r.d)} ${unit}`:'без изменений',W-72,y+108);
     }else{
-      x.fillStyle='#edf1f4';x.font=`600 64px ${HF}`;x.fillText(`${fmt(r.b)} ${unit}`,W-72,y+70);
-      x.fillStyle='#a9b3bd';x.font=`500 30px ${BF}`;x.fillText('стартовая цифра',W-72,y+116);
+      x.fillStyle=CREAM;fit(`${fmt(r.b)} ${unit}`,'#px "Press Start 2P"',470,36);x.fillText(`${fmt(r.b)} ${unit}`,W-72,y+58);
+      x.fillStyle=MUTE;x.font=`28px ${BF}`;x.fillText('стартовая цифра',W-72,y+104);
     }
-    x.textAlign='left';
-    x.fillStyle='#2a343c';x.fillRect(72,y+148,W-144,2);
-    y+=170;
+    x.textAlign='left';x.fillStyle='#3a3652';x.fillRect(72,y+130,W-144,6);
+    y+=160;
   }
   x.textAlign='center';
-  x.fillStyle='#edf1f4';x.font=`600 56px ${HF}`;x.fillText('ТОННАЖ · 30 ДНЕЙ',W/2,1790);
-  if(TAG){x.fillStyle='#eb6834';x.font=`600 48px ${HF}`;x.fillText(TAG,W/2,1856)}
+  x.fillStyle=CREAM;x.font=`24px ${HF}`;x.fillText('ТОННАЖ · 30 ДНЕЙ',W/2,1840);
+  if(TAG){x.fillStyle=PINK;x.font=`28px ${HF}`;x.fillText(TAG,W/2,1892)}
+  x.fillStyle=PINK;x.fillRect(0,H-24,W,24);
   const blob=await new Promise(res=>c.toBlob(res,'image/png'));
   return blob;
 }
@@ -723,7 +771,7 @@ function viewCal(){
 function viewLog(){
   const w=curW();
   if(!w){
-    return `<div class="top"><h1>Тренировка</h1></div><div class="sync" id="sync"></div>${demoBanner()}<div class="empty">Тренировка не открыта. Начни новую или выбери день в календаре.<br><button class="btn pri" data-act="add-workout-today">Начать тренировку сегодня</button></div>`;
+    return `<div class="top"><h1>Тренировка</h1></div><div class="sync" id="sync"></div>${demoBanner()}<div class="empty"><img class="sc" src="img/scene_tired_m.png" width="88" height="158" alt="">Тренировка не открыта. Начни новую или выбери день в календаре.<br><button class="btn pri" data-act="add-workout-today">Начать тренировку сегодня</button></div>`;
   }
   const ro=!!w.demo,st=wStats(w),dis=ro?' disabled':'';
   const exs=w.exercises.map(ex=>{
@@ -798,8 +846,9 @@ function tickRest(){
 }
 function stopRest(){rest=null;clearInterval(restTimer);$('#rest').innerHTML=''}
 function beep(){
-  try{const c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();
-    o.frequency.value=880;g.gain.value=.07;o.connect(g);g.connect(c.destination);o.start();setTimeout(()=>{o.stop();c.close()},320)}catch(e){}
+  try{const c=new(window.AudioContext||window.webkitAudioContext)(),t0=c.currentTime;
+    [[659.25,0],[880,.11],[1318.5,.22]].forEach(([f,d])=>{const o=c.createOscillator(),g=c.createGain();o.type='square';o.frequency.value=f;g.gain.setValueAtTime(.045,t0+d);g.gain.setValueAtTime(0,t0+d+.09);o.connect(g);g.connect(c.destination);o.start(t0+d);o.stop(t0+d+.1)});
+    setTimeout(()=>c.close(),700)}catch(e){}
 }
 
 /* ---------- листы ---------- */
@@ -819,7 +868,7 @@ function paintSheet(){
     el.innerHTML=`<div class="bd" data-act="close-sheet"></div><div class="pn help" role="dialog" aria-modal="true" aria-label="Как пользоваться"><div class="sh"><h2>Как пользоваться</h2><button class="ib" data-act="close-sheet" aria-label="Закрыть">×</button></div>${helpHTML()}</div>`;
     if(s.focus){const f=$('#h-'+s.focus);if(f)f.scrollIntoView()}
   }else if(s.type==='recap'){
-    el.innerHTML=`<div class="bd" data-act="close-sheet"></div><div class="pn recap" role="dialog" aria-modal="true" aria-label="Мои итоги"><div class="sh"><h2>Мои итоги</h2><button class="ib" data-act="close-sheet" aria-label="Закрыть">×</button></div><p class="sub">Картинка для сторис. Отметь аккаунт челленджа.</p>${s.url?`<img src="${s.url}" alt="Итоги челленджа"><div class="ex-actions"><button class="btn pri" data-act="recap-share">Поделиться</button><button class="btn" data-act="recap-save">Скачать картинку</button></div>`:'<div class="empty">Собираю картинку…</div>'}</div>`;
+    el.innerHTML=`<div class="bd" data-act="close-sheet"></div><div class="pn recap" role="dialog" aria-modal="true" aria-label="Мои итоги"><div class="sh"><h2>Мои итоги</h2><button class="ib" data-act="close-sheet" aria-label="Закрыть">×</button></div><p class="sub">Картинка для сторис. Отметь аккаунт челленджа.</p>${s.url?`<img class="pic" src="${s.url}" alt="Итоги челленджа"><div class="ex-actions"><button class="btn pri" data-act="recap-share">Поделиться</button><button class="btn" data-act="recap-save">Скачать картинку</button></div>`:'<div class="empty">Собираю картинку…</div>'}</div>`;
   }else if(s.type==='ex'){
     el.innerHTML=`<div class="bd" data-act="close-sheet"></div><div class="pn" role="dialog" aria-modal="true" aria-label="Добавить упражнение"><div class="sh"><h2>Упражнение</h2><button class="ib" data-act="close-sheet" aria-label="Закрыть">×</button></div>
     <input class="q" id="exq" type="search" placeholder="Поиск или своё название" autocomplete="off" value="${esc(s.q)}">
@@ -876,7 +925,7 @@ function viewProg(){
    <div class="delta" id="delta"></div><div class="chart" id="ch1"></div><div class="note" id="n1"></div>`:`<div class="empty">За этот период нет выполненных подходов. Отмечай галочкой подходы в тренировке, и здесь появится график.</div>`}
   </section>
   <section class="card"><h2>Подходы по группам мышц</h2><div class="chart" id="ch2"></div><div class="legend" id="lg2"></div><div class="note">Считаются выполненные подходы за неделю. Неделя начинается с понедельника.</div></section>
-  <section class="card"><h2>Личные рекорды</h2>${rec.length?rec.map(r=>`<div class="rec"><span class="nm">${esc(r.name)}</span><span class="v">${setTxt(r.s)}</span><span class="s">${fmtShort(r.date)}</span><span class="s">${+r.s.w>0&&+r.s.r>1?'1ПМ ≈ '+fmt(e1(r.s))+' кг':''}</span></div>`).join(''):'<div class="empty">Рекорды появятся после первых выполненных подходов.</div>'}</section>`;
+  <section class="card"><h2>Личные рекорды</h2>${rec.length?rec.map(r=>`<div class="rec"><span class="nm">${esc(r.name)}</span><span class="v">${setTxt(r.s)}</span><span class="s">${fmtShort(r.date)}</span><span class="s">${+r.s.w>0&&+r.s.r>1?'1ПМ ~ '+fmt(e1(r.s))+' кг':''}</span></div>`).join(''):'<div class="empty">Рекорды появятся после первых выполненных подходов.</div>'}</section>`;
 }
 function records(){
   const best={};
@@ -907,7 +956,7 @@ function drawCharts(){
     const first=pts[0],last=pts[pts.length-1];
     if(pts.length>1){
       const d=last.v-first.v,pc=first.v?Math.round(d/first.v*100):0;
-      $('#delta').innerHTML=`<b>${d>=0?'+':'−'}${fmt(Math.abs(d))} ${unit}</b> &nbsp;(${fmt(first.v)} → ${fmt(last.v)}, ${pc>=0?'+':'−'}${Math.abs(pc)}%) за ${fmtShort(first.date)} – ${fmtShort(last.date)}`;
+      $('#delta').innerHTML=`<b>${d>=0?'+':'−'}${fmt(Math.abs(d))} ${unit}</b> &nbsp;(${fmt(first.v)} » ${fmt(last.v)}, ${pc>=0?'+':'−'}${Math.abs(pc)}%) за ${fmtShort(first.date)} – ${fmtShort(last.date)}`;
       $('#n1').textContent='';
     }else{
       $('#delta').innerHTML=pts.length?`<b>${fmt(last.v)} ${unit}</b>`:'';
@@ -945,7 +994,7 @@ function lineChart(host,pts,o){
    ${xl.map((p,i)=>`<text x="${X(p.t).toFixed(1)}" y="${H-7}" text-anchor="${xl.length===1?'middle':i===0?'start':i===xl.length-1?'end':'middle'}">${fmtShort(p.date)}</text>`).join('')}
    ${area?`<path class="ar" d="${area}"/>`:''}${pts.length>1?`<path class="ln" d="${line}"/>`:''}
    <line class="cross" id="cx" y1="${T}" y2="${T+ih}" x1="0" x2="0" style="display:none"/>
-   ${pts.map((p,i)=>`<circle class="pt" data-i="${i}" cx="${X(p.t).toFixed(1)}" cy="${Y(p.v).toFixed(1)}" r="${i===pts.length-1?5.5:3.5}"/>`).join('')}
+   ${pts.map((p,i)=>{const z=i===pts.length-1?10:8;return `<rect class="pt" data-i="${i}" x="${(X(p.t)-z/2).toFixed(1)}" y="${(Y(p.v)-z/2).toFixed(1)}" width="${z}" height="${z}"/>`}).join('')}
    <text class="vl" x="${lx.toFixed(1)}" y="${(Y(lp.v)-11).toFixed(1)}" text-anchor="${lx>W-46?'end':'middle'}">${fmt(lp.v)}</text>
   </svg><div class="tip" hidden></div>`;
   const svg=host.querySelector('svg'),tip=host.querySelector('.tip'),cx=host.querySelector('#cx');
@@ -969,7 +1018,7 @@ function stackChart(host,weeks,present){
   weeks.forEach((wk,i)=>{
     const cx=L+band*i+band/2;let acc=0;
     present.forEach(g=>{const v=wk.c[g];if(!v)return;const ytop=Y(acc+v),h=Y(acc)-ytop;
-      bars+=`<rect class="seg-r" x="${(cx-bw/2).toFixed(1)}" y="${ytop.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="2" style="fill:${gc(g)}"/>`;acc+=v});
+      bars+=`<rect class="seg-r" x="${(cx-bw/2).toFixed(1)}" y="${ytop.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" style="fill:${gc(g)}"/>`;acc+=v});
     if((weeks.length-1-i)%k===0)lab+=`<text x="${cx.toFixed(1)}" y="${H-7}" text-anchor="middle">${fmtShort(wk.start)}</text>`;
   });
   host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Подходы по группам мышц по неделям">

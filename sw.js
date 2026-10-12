@@ -1,6 +1,27 @@
 /* Офлайн-кэш: страница берётся из сети (чтобы обновления доходили сразу), без сети открывается из кэша. */
-const V = 'k30-v1';
-const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
+const V = 'k30-v2';
+const CORE = [
+  "./",
+  "./index.html",
+  "./manifest.webmanifest",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
+  "./icons/apple-touch-icon.png",
+  "./fonts/ps2p-cyrillic.woff2",
+  "./fonts/ps2p-latin.woff2",
+  "./fonts/tiny5-cyrillic.woff2",
+  "./fonts/tiny5-latin.woff2",
+  "./img/boris_flex.png",
+  "./img/boris_flex_s.png",
+  "./img/boris_idle_s.png",
+  "./img/boris_phone_s.png",
+  "./img/boris_point_s.png",
+  "./img/boris_walk_s.png",
+  "./img/scene_bench_m.png",
+  "./img/scene_pull_m.png",
+  "./img/scene_squat_m.png",
+  "./img/scene_tired_m.png"
+];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(V).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
@@ -19,8 +40,7 @@ self.addEventListener('fetch', e => {
   if (r.method !== 'GET') return;
   const u = new URL(r.url);
   const same = u.origin === location.origin;
-  const fonts = u.hostname === 'fonts.googleapis.com' || u.hostname === 'fonts.gstatic.com';
-  if (!same && !fonts) return;
+  if (!same) return;
 
   if (r.mode === 'navigate') {
     e.respondWith(
