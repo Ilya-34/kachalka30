@@ -652,7 +652,7 @@ function setupCard(){
 }
 function viewCh(){
   const td=todayISO();
-  let h=`<div class="brand"><img src="icons/icon-${S.gender==='f'?'':'g-'}192.png" width="52" height="52" alt=""><div class="bt"><h1>${BRAND[S.lang]}</h1><div class="mute">${L('Дневник тренировок','Workout log')}</div></div><button class="ib" data-act="settings" aria-label="${L('Настройки','Settings')}">${IC.gear}</button></div><div class="sync" id="sync"></div>${nudges()}`;
+  let h=`<div class="brand"><img src="icons/icon-${S.gender==='f'?'g-':''}192.png" width="52" height="52" alt=""><div class="bt"><h1>${BRAND[S.lang]}</h1><div class="mute">${L('Дневник тренировок','Workout log')}</div></div><button class="ib" data-act="settings" aria-label="${L('Настройки','Settings')}">${IC.gear}</button></div><div class="sync" id="sync"></div>${nudges()}`;
   if(!S.start||S.editStart)return h+setupCard()+chFooter();
   const wd=weekDays(S.weekOff||0),first=wd[0].date,last=wd[13].date;
   if(!S.cdSel||S.cdSel<first||S.cdSel>last)S.cdSel=(td>=first&&td<=last)?td:(wd.find(d=>d.p&&d.date>=S.start)||wd[0]).date;
