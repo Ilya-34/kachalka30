@@ -5,16 +5,16 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="30 дней">
-<meta name="application-name" content="30 дней качалка">
-<meta name="description" content="Челлендж 30 дней качалка: записывай подходы, смотри прогресс.">
+<meta name="apple-mobile-web-app-title" content="Тоннаж">
+<meta name="application-name" content="Тоннаж">
+<meta name="description" content="Тоннаж: записывай подходы, смотри прогресс.">
 <meta name="theme-color" content="#eef1f4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e1215" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{color-scheme:light dark;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}body{margin:0}[hidden]{display:none!important}</style>
-<title>30 дней качалка</title>
+<title>Тоннаж</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Oswald:wght@500;600&display=swap">
@@ -380,7 +380,7 @@ async function exportData(){
   const blob=new Blob([JSON.stringify(data,null,1)],{type:'application/json'});
   try{
     const f=new File([blob],name,{type:'application/json'});
-    if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'Копия 30 дней качалка'});lsSet(LSX,Date.now());toast('Копия сохранена');render();return}
+    if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'Копия Тоннаж'});lsSet(LSX,Date.now());toast('Копия сохранена');render();return}
   }catch(e){if(e&&e.name==='AbortError')return}
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;
   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
@@ -547,7 +547,7 @@ function setupCard(){
 }
 function viewCh(){
   const td=todayISO();
-  let h=`<div class="brand"><img src="icons/icon-192.png" alt=""><div><h1>30 дней качалка</h1><div class="mute">Пн · Ср · Пт · 30 дней вместе</div></div></div><div class="sync" id="sync"></div>${nudges()}`;
+  let h=`<div class="brand"><img src="icons/icon-192.png" alt=""><div><h1>Тоннаж</h1><div class="mute">Пн · Ср · Пт · 30 дней вместе</div></div></div><div class="sync" id="sync"></div>${nudges()}`;
   if(!S.start||S.editStart)return h+setupCard()+chFooter();
   const days=chDays(),end=days[29].date,n=dayDiff(td,S.start)+1,state=n<1?'before':n>30?'after':'on';
   if(!S.cdSel||S.cdSel<S.start||S.cdSel>end)S.cdSel=state==='on'?td:days[0].date;
@@ -637,7 +637,7 @@ async function buildRecap(){
   x.fillStyle='#12171c';x.fillRect(0,0,W,H);
   x.fillStyle='#eb6834';x.fillRect(0,0,W,14);
   x.textBaseline='alphabetic';x.textAlign='left';
-  x.fillStyle='#edf1f4';x.font=`600 84px ${HF}`;x.fillText('30 ДНЕЙ КАЧАЛКА',72,176);
+  x.fillStyle='#edf1f4';x.font=`600 84px ${HF}`;x.fillText('ТОННАЖ',72,176);
   x.fillStyle='#a9b3bd';x.font=`500 38px ${BF}`;x.fillText(R.sub,72,236);
   const tiles=[[R.tr,'тренировок'],[R.sets,'подходов'],[R.vol>=1000?fmt(R.vol/1000):fmt(R.vol),R.vol>=1000?'тонн поднято':'кг поднято']];
   const tw=(W-144-48)/3;
@@ -668,7 +668,7 @@ async function buildRecap(){
     y+=170;
   }
   x.textAlign='center';
-  x.fillStyle='#edf1f4';x.font=`600 56px ${HF}`;x.fillText('ЧЕЛЛЕНДЖ 30 ДНЕЙ КАЧАЛКА',W/2,1790);
+  x.fillStyle='#edf1f4';x.font=`600 56px ${HF}`;x.fillText('ТОННАЖ · 30 ДНЕЙ',W/2,1790);
   if(TAG){x.fillStyle='#eb6834';x.font=`600 48px ${HF}`;x.fillText(TAG,W/2,1856)}
   const blob=await new Promise(res=>c.toBlob(res,'image/png'));
   return blob;
