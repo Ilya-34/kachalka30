@@ -146,6 +146,7 @@ button.chip[aria-pressed="true"] i{box-shadow:0 0 0 2px var(--o)}
 .ex-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
 .addex{width:100%;min-height:52px;border:3px dashed var(--mute);font-weight:700;font-size:18px;color:var(--ink2);background:transparent}
 .addex:active{background:var(--surface)}
+.fin{width:100%;min-height:54px;margin-top:16px;font-size:18px}
 
 /* таймер отдыха */
 #rest{position:fixed;left:0;right:0;bottom:calc(var(--tabh) + env(safe-area-inset-bottom,0px) + 14px);z-index:30;padding-inline:18px;pointer-events:none}
@@ -710,7 +711,7 @@ function viewCh(){
 function helpHTML(){
   const intro=S.gender==='f'?L('Я <b>Лейла</b>. Сейчас покажу, как тут всё устроено.','I’m <b>Leila</b>. Let me show you how everything works.'):L('Я <b>Борис</b>. Сейчас покажу, как тут всё устроено.','I’m <b>Boris</b>. Let me show you how everything works.');
   if(S.lang==='en')return `<div class="hh">${spr('phone')}<div class="bubble">${intro}</div></div><h3 id="h-start">Getting started</h3>
-  <ol><li>On the “Program” tab pick the date you start training (a Monday is best).</li><li>On a workout day open “Program” and tap “Start workout”: the day’s program fills in by itself.</li><li>After each set enter the weight and reps and tap the check mark. The rest timer starts.</li></ol>
+  <ol><li>On the “Program” tab pick the date you start training (a Monday is best).</li><li>On a workout day open “Program” and tap “Start workout”: the day’s program fills in by itself.</li><li>After each set enter the weight and reps and tap the check mark. The rest timer starts.</li><li>When you’re done, tap “Finish workout” at the bottom: the workout is saved.</li></ol>
   <h3 id="h-log">Logging a workout</h3>
   <ul><li>The “Last time” line shows what you did in the previous workout. Your goal: a little better.</li><li>“+ Set” and “− Set” change the number of sets, “Remove” deletes an exercise, “+ Add exercise” adds your own.</li><li>For bodyweight exercises (pull-ups, push-ups) leave the weight empty and enter only reps.</li><li>The rest timer can be set to 60, 90, 120 or 180 seconds. In the last 5 seconds it ticks, then it beeps and hides itself.</li><li>Missed a day? Tap it in the program calendar and choose “Log missed workout”.</li></ul>
   <h3 id="h-prog">Progress and results</h3>
@@ -724,7 +725,7 @@ function helpHTML(){
   <h3>Important</h3>
   <p>Choose weights that suit you. If you feel pain or get injured, stop and see a doctor. Ask any questions about the app in the club chat.</p>`;
   return `<div class="hh">${spr('phone')}<div class="bubble">${intro}</div></div><h3 id="h-start">С чего начать</h3>
-  <ol><li>На вкладке «Программа» выбери дату начала тренировок (лучше понедельник).</li><li>В день тренировки открой «Программа» и нажми «Начать тренировку»: программа дня подставится сама.</li><li>После каждого подхода впиши вес и повторы и нажми галочку. Включится таймер отдыха.</li></ol>
+  <ol><li>На вкладке «Программа» выбери дату начала тренировок (лучше понедельник).</li><li>В день тренировки открой «Программа» и нажми «Начать тренировку»: программа дня подставится сама.</li><li>После каждого подхода впиши вес и повторы и нажми галочку. Включится таймер отдыха.</li><li>Когда закончил, нажми «Закончить тренировку» внизу: тренировка запишется.</li></ol>
   <h3 id="h-log">Как записывать тренировку</h3>
   <ul><li>Строка «В прошлый раз» показывает, что было на прошлой тренировке. Твоя цель: чуть лучше.</li><li>Кнопки «+ Подход» и «− Подход» меняют число подходов, «Убрать» удаляет упражнение, «+ Добавить упражнение» добавляет своё.</li><li>Упражнение без веса (подтягивания, отжимания): оставь вес пустым и пиши только повторы.</li><li>Таймер отдыха переключается кнопками 60, 90, 120 и 180 секунд. В последние 5 секунд он тикает, потом даёт сигнал и сам пропадает.</li><li>Пропустил день? Нажми на него в календаре программы и «Записать пропущенную».</li></ul>
   <h3 id="h-prog">Прогресс и итоги</h3>
@@ -893,7 +894,8 @@ function viewLog(){
   <div class="strip" style="margin-top:12px"><div><div class="label">${L('Упражнений','Exercises')}</div><div class="v">${w.exercises.length}</div></div><div><div class="label">${L('Подходов','Sets')}</div><div class="v"><span id="st-sets">${st.sets}</span> <small>/ <span id="st-tot">${st.total}</span></small></div></div><div><div class="label">${L('Тоннаж','Tonnage')}</div><div class="v"><span id="st-vol">${fmt(st.vol)}</span> <small>${U().kg}</small></div></div></div>
   <div class="rest-pick"><span class="label">${L('Отдых','Rest')}</span>${[60,90,120,180].map(v=>`<button class="chip" data-act="rest-dur" data-v="${v}" aria-pressed="${S.restSec===v}">${v} ${L('с','s')}</button>`).join('')}</div>
   ${exs||`<div class="empty" style="margin-bottom:12px">${L('Упражнений пока нет. Добавь первое.','No exercises yet. Add the first one.')}</div>`}
-  <button class="addex" data-act="add-ex">+ ${L('Добавить упражнение','Add exercise')}</button>`;
+  <button class="addex" data-act="add-ex">+ ${L('Добавить упражнение','Add exercise')}</button>
+  <button class="btn pri fin" data-act="finish">${L('Закончить тренировку','Finish workout')}</button>`;
 }
 function refreshStats(){
   const w=curW();if(!w)return;const st=wStats(w);
@@ -907,6 +909,14 @@ function createWorkout(date,tpl){
   workouts[id]=w;persist(id);
   S.active=id;if(S.tab!=='log')S.from=S.tab;S.tab='log';S.sel=date;askPersist();S.y=parse(date).getFullYear();S.m=parse(date).getMonth();
   closeSheet();render();window.scrollTo(0,0);
+}
+function finishWorkout(clean){
+  const w=curW();if(!w){closeSheet();return}
+  if(clean){w.exercises.forEach(ex=>{ex.sets=ex.sets.filter(s=>s.done)});w.exercises=w.exercises.filter(ex=>ex.sets.length)}
+  w.finished=Date.now();persist(w.id);stopRest();
+  const st=wStats(w);
+  closeSheet();S.confirmDel=false;S.confirmEx=null;S.tab=S.from||'cal';render();window.scrollTo(0,0);
+  toast(L(`Тренировка записана: ${st.sets} ${nsets(st.sets)}, ${fmtVol(st.vol)}`,`Workout saved: ${st.sets} ${nsets(st.sets)}, ${fmtVol(st.vol)}`));
 }
 function leaveLog(){
   const w=workouts[S.active];
@@ -970,6 +980,13 @@ function paintSheet(){
     <h3 style="margin-top:0">${L('По программе','From the program')}</h3>${[1,3,5].map(k=>`<button class="opt" data-act="new-prog" data-dow="${k}"><i style="--mc:var(--m${PROGRAM[k].color})"></i><span>${SHORT(k)} · ${ttl(PROGRAM[k].title)}<br><small>${PROGRAM[k].ex.length} ${L('упражнений','exercises')}</small></span></button>`).join('')}
     <h3>${L('Или своя','Or your own')}</h3><button class="btn" style="width:100%" data-act="new-empty">${L('Пустая тренировка','Empty workout')}</button>
     ${rec.length?`<h3>${L('Повторить прошлую','Repeat a previous one')}</h3>${rec.map(w=>`<button class="opt" data-act="new-from" data-id="${w.id}"><span>${esc(wName(w))}<br><small>${w.exercises.length} ${U().ex} · ${fmtDay(w.date)}</small></span></button>`).join('')}`:''}</div>`;
+  }else if(s.type==='finish'){
+    const w=curW(),st=w?wStats(w):{sets:0,vol:0,total:0},k=st.total-st.sets;
+    el.innerHTML=`${shHead(L('Закончить тренировку','Finish workout'))}
+    <p class="sub">${st.sets} ${nsets(st.sets)} · ${fmtVol(st.vol)}</p>
+    ${!st.sets?`<p class="note" style="margin:0 0 14px">${L('Ни один подход не отмечен галочкой. Отмеченные подходы попадают в прогресс и тоннаж.','No set is checked yet. Only checked sets count toward progress and tonnage.')}</p><div class="ex-actions"><button class="btn pri" data-act="close-sheet">${L('Вернуться к тренировке','Back to the workout')}</button><button class="btn" data-act="fin-do" data-clean="0">${L('Закончить как есть','Finish anyway')}</button></div>`
+    :k>0?`<p class="note" style="margin:0 0 14px">${L(`Не отмечено подходов: ${k}. Убрать их из записи?`,`Sets not checked: ${k}. Remove them from the record?`)}</p><div class="ex-actions" style="flex-direction:column"><button class="btn pri" data-act="fin-do" data-clean="1">${L('Закончить и убрать их','Finish and remove them')}</button><button class="btn" data-act="fin-do" data-clean="0">${L('Закончить, оставить как есть','Finish, keep them')}</button><button class="btn" data-act="close-sheet">${L('Продолжить тренировку','Keep training')}</button></div>`
+    :`<div class="ex-actions" style="flex-direction:column"><button class="btn pri" data-act="fin-do" data-clean="0">${L('Закончить','Finish')}</button><button class="btn" data-act="close-sheet">${L('Продолжить тренировку','Keep training')}</button></div>`}</div>`;
   }else if(s.type==='help'){
     el.innerHTML=`${shHead(L('Как пользоваться','How to use'),'help')}${helpHTML()}</div>`;
     if(s.focus){const f=$('#h-'+s.focus);if(f)f.scrollIntoView()}
@@ -1194,6 +1211,8 @@ document.addEventListener('click',e=>{
    case'new-empty':createWorkout(S.sheet.date);break;
    case'new-from':{const t=all()[b.dataset.id];createWorkout(S.sheet.date,t);break}
    case'open':S.active=b.dataset.id;S.from='cal';S.tab='log';S.confirmDel=false;render();window.scrollTo(0,0);break;
+   case'finish':if(curW())openSheet({type:'finish'});break;
+   case'fin-do':finishWorkout(b.dataset.clean==='1');break;
    case'back':leaveLog();S.tab=S.from||'cal';render();break;
    case'del-w':{
      if(!w)break;
