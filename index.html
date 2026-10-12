@@ -868,9 +868,7 @@ function viewCal(){
 /* ---------- тренировка ---------- */
 function viewLog(){
   const w=curW();
-  if(!w){
-    return `<div class="top"><h1>${L('Тренировка','Workout')}</h1></div><div class="sync" id="sync"></div><div class="empty">${scene('tired','sc')}${L('Тренировка не открыта. Начни новую или выбери день в календаре.','No workout is open. Start a new one or pick a day in the calendar.')}<br><button class="btn pri" data-act="add-workout-today">${L('Начать тренировку сегодня','Start a workout today')}</button></div>`;
-  }
+  if(!w)return viewLogStart();
   const st=wStats(w);
   const exs=w.exercises.map(ex=>{
     const prev=lastTime(ex.name,w.date,w.id),pb=priorBest(ex.name,w);
@@ -897,6 +895,24 @@ function viewLog(){
   <button class="addex" data-act="add-ex">+ ${L('Добавить упражнение','Add exercise')}</button>
   <button class="btn pri fin" data-act="finish">${L('Закончить тренировку','Finish workout')}</button>`;
 }
+const isComplete=w=>{if(w.finished)return true;const st=wStats(w);return st.total>0&&st.sets>=st.total};
+function viewLogStart(){
+  const td=todayISO(),dow=parse(td).getDay(),p=PROGRAM[dow],tw=dayWorkout(td),nx=nextPlanned(td);
+  let body;
+  if(tw&&isComplete(tw)){
+    const st=wStats(tw);
+    body=`<div class="plan">${L('Сегодняшняя тренировка записана','Today’s workout is saved')}: <b>${esc(wName(tw))}</b>. ${st.sets} ${nsets(st.sets)}, ${fmtVol(st.vol)}.</div>
+    <div class="ex-actions"><button class="btn pri" data-act="add-workout-today">${L('Начать новую тренировку','Start a new workout')}</button><button class="btn" data-act="ch-open" data-date="${td}">${L('Посмотреть записанную','View the saved one')}</button></div>`;
+  }else if(p){
+    body=`<div class="plan">${L('Сегодня по программе','Today in the program')}: <b>${ttl(p.title)}</b></div>
+    <div class="ex-actions"><button class="btn pri" data-act="ch-start" data-date="${td}">${L('Начать','Start')}: ${ttl(p.title)}</button><button class="btn" data-act="add-workout-today">${L('Другая тренировка','Another workout')}</button></div>`;
+  }else{
+    body=`<div class="plan">${L('Сегодня по программе отдых','Rest day in the program')}${nx?`. ${L('Следующая','Next')}: <b>${dowN()[(nx.dow+6)%7]}, ${fmtDay(nx.date)}</b>, ${ttl(nx.p.title)}`:''}.</div>
+    <div class="ex-actions"><button class="btn pri" data-act="add-workout-today">${L('Начать свою тренировку','Start your own workout')}</button></div>`;
+  }
+  return `<div class="top"><h1>${L('Тренировка','Workout')}</h1></div><div class="sync" id="sync"></div>
+  <div class="empty">${scene(p?SCENE_BY[dow]:'tired','sc')}${body}</div>`;
+}
 function refreshStats(){
   const w=curW();if(!w)return;const st=wStats(w);
   const a=$('#st-sets'),b=$('#st-tot'),c=$('#st-vol');
@@ -915,12 +931,13 @@ function finishWorkout(clean){
   if(clean){w.exercises.forEach(ex=>{ex.sets=ex.sets.filter(s=>s.done)});w.exercises=w.exercises.filter(ex=>ex.sets.length)}
   w.finished=Date.now();persist(w.id);stopRest();
   const st=wStats(w);
-  closeSheet();S.confirmDel=false;S.confirmEx=null;S.tab=S.from||'cal';render();window.scrollTo(0,0);
+  closeSheet();S.confirmDel=false;S.confirmEx=null;S.active=null;S.tab=S.from||'cal';render();window.scrollTo(0,0);
   toast(L(`Тренировка записана: ${st.sets} ${nsets(st.sets)}, ${fmtVol(st.vol)}`,`Workout saved: ${st.sets} ${nsets(st.sets)}, ${fmtVol(st.vol)}`));
 }
 function leaveLog(){
   const w=workouts[S.active];
   if(w&&!w.exercises.length&&!w.title){delete workouts[w.id];persist(w.id);S.active=null}
+  else if(w&&isComplete(w))S.active=null;
   S.confirmDel=false;S.confirmEx=null;
 }
 function addExercise(name,g){
@@ -1200,7 +1217,7 @@ document.addEventListener('click',e=>{
    case'tab':{
      if(S.tab==='log')leaveLog();
      S.tab=b.dataset.tab;
-     if(S.tab==='log'&&!S.active){const t=list().filter(x=>x.date===todayISO()).pop();if(t)S.active=t.id}
+     if(S.tab==='log'&&!S.active){const t=list().filter(x=>x.date===todayISO()&&x.exercises.length&&!isComplete(x)).pop();if(t)S.active=t.id}
      render();window.scrollTo(0,0);break}
    case'prev':S.m--;if(S.m<0){S.m=11;S.y--}render();break;
    case'next':S.m++;if(S.m>11){S.m=0;S.y++}render();break;
