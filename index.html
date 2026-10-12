@@ -26,14 +26,14 @@
 
 :root{
   --bg:#1b1a24; --bg2:#201f2b; --surface:#272535; --surface2:#34304a; --ink:#f6f1e7; --ink2:#c9c4dc; --mute:#948eae;
-  --o:#0b0a10; --line:#0b0a10; --accent:#ff3db8; --accent2:#c42a8f; --on-accent:#14101c; --bub:#f6f1e7;
+  --o:#0b0a10; --line:#0b0a10; --accent:#7af8ba; --accent2:#4fd18f; --on-accent:#06241a; --bub:#f6f1e7;
   --ok:#45e09b; --danger:#ff6a62; --pr:#ffd23f; --pr-bg:#4a3b0a;
-  --m1:#4aa8ff; --m2:#ff7a3d; --m3:#3ddc97; --m4:#ffd23f; --m5:#c77dff; --m6:#8fe04a; --m7:#7f86ff; --m8:#ff5a52;
+  --m1:#4aa8ff; --m2:#ff7a3d; --m3:#ff8fc2; --m4:#ffd23f; --m5:#c77dff; --m6:#8fe04a; --m7:#7f86ff; --m8:#ff5a52;
   --f-head:"Press Start 2P","Courier New",monospace; --f-body:Rubik,system-ui,-apple-system,"Segoe UI",sans-serif;
   --ob:0 -3px 0 0 var(--o),0 3px 0 0 var(--o),-3px 0 0 0 var(--o),3px 0 0 0 var(--o);
   --bev:inset 0 -4px 0 0 rgba(0,0,0,.30),inset 0 4px 0 0 rgba(255,255,255,.07);
   --tabh:66px;
-  --bevd:rgba(120,10,80,.45); --accd:#a1126f;
+  --bevd:rgba(8,90,55,.45); --accd:#0b7a4f;
 }
 *{box-sizing:border-box}
 html{color-scheme:dark}
@@ -293,14 +293,14 @@ button.chip[aria-pressed="true"] i{box-shadow:0 0 0 2px var(--o)}
 .langsw{float:right;margin-top:3px}
 .gcards{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
 .gcard{--ga:var(--accent);background:var(--surface);box-shadow:var(--ob),inset 0 -8px 0 0 var(--ga),inset 0 4px 0 0 rgba(255,255,255,.07);padding:18px 8px 22px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:14px;font-weight:700;font-size:17px;color:var(--ink);min-height:300px;text-align:center}
-.gcard.m{--ga:#ff3db8}
-.gcard.f{--ga:#7af8ba}
+.gcard.m{--ga:#7af8ba}
+.gcard.f{--ga:#ff3db8}
 .gcard:active{transform:translateY(3px)}
 .gcard img{display:block}
 html[data-g="f"]{
   --bg:#14201f; --bg2:#192827; --surface:#1f2e2c; --surface2:#2b403d; --ink:#f2f9f5; --ink2:#c2d6cd; --mute:#8aa79d;
-  --o:#060f0d; --accent:#7af8ba; --accent2:#4fd18f; --on-accent:#06241a; --bub:#f2f9f5; --ok:#7af8ba; --danger:#ff7b72;
-  --bevd:rgba(8,90,55,.45); --accd:#0b7a4f; --m3:#ff8fc2;
+  --o:#060f0d; --accent:#ff3db8; --accent2:#c42a8f; --on-accent:#14101c; --bub:#f2f9f5; --ok:#7af8ba; --danger:#ff7b72;
+  --bevd:rgba(120,10,80,.45); --accd:#a1126f; --m3:#3ddc97;
 }
 html[data-g="f"] .cd.pl{background:color-mix(in srgb,var(--mc) 14%,var(--surface2))}
 </style>
@@ -652,7 +652,7 @@ function setupCard(){
 }
 function viewCh(){
   const td=todayISO();
-  let h=`<div class="brand"><img src="icons/icon-${S.gender==='f'?'g-':''}192.png" width="52" height="52" alt=""><div class="bt"><h1>${BRAND[S.lang]}</h1><div class="mute">${L('Дневник тренировок','Workout log')}</div></div><button class="ib" data-act="settings" aria-label="${L('Настройки','Settings')}">${IC.gear}</button></div><div class="sync" id="sync"></div>${nudges()}`;
+  let h=`<div class="brand"><img src="icons/icon-${S.gender==='f'?'':'g-'}192.png" width="52" height="52" alt=""><div class="bt"><h1>${BRAND[S.lang]}</h1><div class="mute">${L('Дневник тренировок','Workout log')}</div></div><button class="ib" data-act="settings" aria-label="${L('Настройки','Settings')}">${IC.gear}</button></div><div class="sync" id="sync"></div>${nudges()}`;
   if(!S.start||S.editStart)return h+setupCard()+chFooter();
   const wd=weekDays(S.weekOff||0),first=wd[0].date,last=wd[13].date;
   if(!S.cdSel||S.cdSel<first||S.cdSel>last)S.cdSel=(td>=first&&td<=last)?td:(wd.find(d=>d.p&&d.date>=S.start)||wd[0]).date;
